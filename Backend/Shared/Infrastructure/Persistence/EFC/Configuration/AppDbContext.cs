@@ -1,12 +1,9 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using Backend.IAM.Domain.Model.Aggregates;
 using Backend.Interaction.Domain.Model.Aggregates;
 using Backend.Orders.Domain.Model.Aggregates;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json; 
 using Backend.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
+using Backend.TechnicalSupport.Domain.Model.Aggregates;
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 
 namespace Backend.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -24,21 +21,21 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         base.OnModelCreating(builder);
         
         //TechnicalSupport
-        builder.Entity<TechnicalSupport.TechnicalSupport>().HasKey(f => f.Id);
-        builder.Entity<TechnicalSupport.TechnicalSupport>().Property(f => f.Id).IsRequired().ValueGeneratedOnAdd();
-        builder.Entity<TechnicalSupport.TechnicalSupport>().Property(f => f.TechnicianId).IsRequired();
-        builder.Entity<TechnicalSupport.TechnicalSupport>().Property(f => f.SupportType).IsRequired();
-        builder.Entity<TechnicalSupport.TechnicalSupport>().Property(f => f.DateOfRequest).IsRequired();
-        builder.Entity<TechnicalSupport.TechnicalSupport>().Property(f => f.StartDate).IsRequired();
-        builder.Entity<TechnicalSupport.TechnicalSupport>().Property(f => f.EndDate).IsRequired();
+        builder.Entity<TechnicalSupport.Domain.Model.Aggregates.TechnicalSupport>().HasKey(f => f.Id);
+        builder.Entity<TechnicalSupport.Domain.Model.Aggregates.TechnicalSupport>().Property(f => f.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<TechnicalSupport.Domain.Model.Aggregates.TechnicalSupport>().Property(f => f.TechnicianId).IsRequired();
+        builder.Entity<TechnicalSupport.Domain.Model.Aggregates.TechnicalSupport>().Property(f => f.SupportType).IsRequired();
+        builder.Entity<TechnicalSupport.Domain.Model.Aggregates.TechnicalSupport>().Property(f => f.DateOfRequest).IsRequired();
+        builder.Entity<TechnicalSupport.Domain.Model.Aggregates.TechnicalSupport>().Property(f => f.StartDate).IsRequired();
+        builder.Entity<TechnicalSupport.Domain.Model.Aggregates.TechnicalSupport>().Property(f => f.EndDate).IsRequired();
         
         //Technician
-        builder.Entity<TechnicalSupport.Technician>().HasKey(f => f.Id);
-        builder.Entity<TechnicalSupport.Technician>().Property(f => f.Id).IsRequired().ValueGeneratedOnAdd();
-        builder.Entity<TechnicalSupport.Technician>().Property(f => f.Name).IsRequired();
-        builder.Entity<TechnicalSupport.Technician>().Property(f => f.Status).IsRequired();
-        builder.Entity<TechnicalSupport.Technician>().Property(f => f.Stars).IsRequired();
-        builder.Entity<TechnicalSupport.Technician>().Property(x => x.Img).IsRequired().HasMaxLength(200);
+        builder.Entity<Technician>().HasKey(f => f.Id);
+        builder.Entity<Technician>().Property(f => f.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<Technician>().Property(f => f.Name).IsRequired();
+        builder.Entity<Technician>().Property(f => f.Status).IsRequired();
+        builder.Entity<Technician>().Property(f => f.Stars).IsRequired();
+        builder.Entity<Technician>().Property(x => x.Img).IsRequired().HasMaxLength(200);
         
         //Bounded Context Interaction
         //ComponentReview

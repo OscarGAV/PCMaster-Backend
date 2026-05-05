@@ -1,5 +1,3 @@
-using Backend.Component.Domain.Model.ValueObjects;
-
 namespace Backend.Component.Interfaces.REST.Resources
 {
     public record ComponentResource(

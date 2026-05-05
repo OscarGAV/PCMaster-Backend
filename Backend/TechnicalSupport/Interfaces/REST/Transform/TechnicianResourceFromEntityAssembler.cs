@@ -1,8 +1,9 @@
+using Backend.TechnicalSupport.Domain.Model.Aggregates;
 using Backend.TechnicalSupport.Interfaces.REST.Resources;
 
 namespace Backend.TechnicalSupport.Interfaces.REST.Transform
 {
-    public class TechnicianResourceFromEntityAssembler
+    public static class TechnicianResourceFromEntityAssembler
     {
         public static TechnicianResource ToResourceFromEntity(Technician entity)
         {

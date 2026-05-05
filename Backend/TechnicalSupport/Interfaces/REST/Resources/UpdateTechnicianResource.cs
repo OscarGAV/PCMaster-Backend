@@ -6,7 +6,7 @@ public record UpdateTechnicianResource()
 {
     [Required(ErrorMessage = "Name is required")]
     [MaxLength(100, ErrorMessage = "Name must be at most 100 characters")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     public bool Status { get; set; }
 

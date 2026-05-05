@@ -64,8 +64,6 @@ public class TechnicalSupportReviewController(ITechnicalSupportReviewCommandServ
     {
         var command = UpdateTechnicalSupportReviewCommandFromResourceAssembler.ToCommandFromResource(id, resource);
         var result = await technicalSupportReviewCommandService.Handle(command);
-    
-        if (result is null) return NotFound();
 
         return Ok(TechnicalSupportReviewResourceFromEntityAssembler.ToResourceFromEntity(result));
     }

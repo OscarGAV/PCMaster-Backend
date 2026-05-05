@@ -9,7 +9,7 @@ namespace Backend.TechnicalSupport.Application.Internal.CommandServices;
 public class TechnicalSupportCommandService(ITechnicalSupportRepository technicalSupportRepository, 
     IUnitOfWork unitOfWork) : ITechnicalSupportCommandService
 {
-    public async Task<TechnicalSupport?> Handle(CreateTechnicalSupportCommand command)
+    public async Task<Domain.Model.Aggregates.TechnicalSupport?> Handle(CreateTechnicalSupportCommand command)
     {
         if (string.IsNullOrWhiteSpace(command.TechnicianId))
             throw new ValidationException("TechnicianId cannot be empty");
@@ -32,7 +32,7 @@ public class TechnicalSupportCommandService(ITechnicalSupportRepository technica
             throw new DuplicateEntityException($"TechnicalSupport entity with support type '{command.SupportType}' " +
                                  $"and technician Id '{command.TechnicianId}' already exists");
 
-        technicalSupport = new TechnicalSupport(command);
+        technicalSupport = new Domain.Model.Aggregates.TechnicalSupport(command);
 
         try
         {
@@ -47,7 +47,7 @@ public class TechnicalSupportCommandService(ITechnicalSupportRepository technica
         return technicalSupport;
     }
     
-    public async Task<TechnicalSupport> Handle(UpdateTechnicalSupportCommand command)
+    public async Task<Domain.Model.Aggregates.TechnicalSupport> Handle(UpdateTechnicalSupportCommand command)
     {
         if (command.Id <= 0)
             throw new ValidationException("Id must be a positive number");

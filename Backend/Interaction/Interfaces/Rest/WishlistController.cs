@@ -59,8 +59,6 @@ public class WishlistController(IWishlistCommandService wishlistCommandService,
     {
         var command = UpdateWishlistCommandFromResourceAssembler.ToCommandFromResource(id, resource);
         var result = await wishlistCommandService.Handle(command);
-    
-        if (result is null) return NotFound();
 
         return Ok(WishlistResourceFromEntityAssembler.ToResourceFromEntity(result));
     }

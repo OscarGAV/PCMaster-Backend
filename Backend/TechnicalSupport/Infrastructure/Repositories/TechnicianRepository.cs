@@ -1,6 +1,6 @@
 using Backend.Shared.Infrastructure.Persistence.EFC.Configuration;
 using Backend.Shared.Infrastructure.Persistence.EFC.Repositories;
-using Backend.TechnicalSupport;
+using Backend.TechnicalSupport.Domain.Model.Aggregates;
 using Backend.TechnicalSupport.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 

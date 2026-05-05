@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Backend.IAM.Domain.Model.Aggregates;
 
 /// <summary>
@@ -13,39 +15,9 @@ public class User(string username, string passwordHash)
 {
     public int Id { get; }
 
+    [MaxLength(30, ErrorMessage = "Username must be at most 30 characters")]
     public string Username { get; private set; } = username;
     
+    [MaxLength(255, ErrorMessage = "Password hash must be at most 255 characters")]
     public string PasswordHash { get; private set; } = passwordHash;
-
-    /// <summary>
-    /// Update the username of the user 
-    /// </summary>
-    /// <param name="username">
-    /// The new username to update
-    /// </param>
-    /// <returns>
-    /// The updated user
-    /// </returns>
-    public User UpdateUsername(string username)
-    {
-        this.Username = username;
-        return this;
-    }
-    
-    /// <summary>
-    /// Update the password hash of the user
-    /// </summary>
-    /// <param name="passwordHash">
-    /// The new password hash to update
-    /// </param>
-    /// <returns>
-    /// The updated user
-    /// </returns>
-    public User UpdatePasswordHash(string passwordHash)
-    {
-        this.PasswordHash = passwordHash;
-        return this;
-    }
-    
-
 }

@@ -16,7 +16,7 @@ public class TechnicalSupportQueryService(ITechnicalSupportRepository technicalS
     /// </summary>
     /// <param name="query"></param>
     /// <returns></returns>
-    public async Task<IEnumerable<TechnicalSupport>> Handle(GetAllTechnicalSupportQuery query)
+    public async Task<IEnumerable<Domain.Model.Aggregates.TechnicalSupport>> Handle(GetAllTechnicalSupportQuery query)
     {
         return await technicalSupportRepository.ListAsync();
     }
@@ -26,7 +26,7 @@ public class TechnicalSupportQueryService(ITechnicalSupportRepository technicalS
     /// </summary>
     /// <param name="query"> The query containing the Support Type. </param>
     /// <returns> An enumerable collection of TechnicalSupport entities associated with the provided Support Type. </returns>
-    public async Task<IEnumerable<TechnicalSupport>> Handle(GetTechnicalSupportBySupportTypeQuery query)
+    public async Task<IEnumerable<Domain.Model.Aggregates.TechnicalSupport>> Handle(GetTechnicalSupportBySupportTypeQuery query)
     {
         return await technicalSupportRepository.FindBySupportTypeAsync(query.SupportType);
     }
@@ -36,9 +36,9 @@ public class TechnicalSupportQueryService(ITechnicalSupportRepository technicalS
     /// </summary>
     /// <param name="query"> The query containing the Support Type and Technician ID. </param>
     /// <returns> The TechnicalSupport entity associated with the specified Support Type and Technician ID, if found; otherwise, null. </returns>
-    public async Task<TechnicalSupport> Handle(GetTechnicalSupportBySupportTypeAndTechnicianIdQuery query)
+    public async Task<Domain.Model.Aggregates.TechnicalSupport> Handle(GetTechnicalSupportBySupportTypeAndTechnicianIdQuery query)
     {
-        return await technicalSupportRepository.FindBySupportTypeAndTechnicianIdAsync(query.SupportType, query.TechnicianId);
+        return await technicalSupportRepository.FindBySupportTypeAndTechnicianIdAsync(query.SupportType, query.TechnicianId) ?? throw new InvalidOperationException();
     }
 
     /// <summary>
@@ -46,8 +46,8 @@ public class TechnicalSupportQueryService(ITechnicalSupportRepository technicalS
     /// </summary>
     /// <param name="query"> The query containing the unique identifier of the TechnicalSupport entity. </param>
     /// <returns> The TechnicalSupport entity with the specified ID, if found; otherwise, null. </returns>
-    public async Task<TechnicalSupport> Handle(GetTechnicalSupportByIdQuery query)
+    public async Task<Domain.Model.Aggregates.TechnicalSupport> Handle(GetTechnicalSupportByIdQuery query)
     {
-        return await technicalSupportRepository.FindByIdAsync(query.Id);
+        return await technicalSupportRepository.FindByIdAsync(query.Id) ?? throw new InvalidOperationException();
     }
 }

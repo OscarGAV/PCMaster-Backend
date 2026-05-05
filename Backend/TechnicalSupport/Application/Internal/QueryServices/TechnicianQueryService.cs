@@ -1,4 +1,5 @@
 using Backend.TechnicalSupport;
+using Backend.TechnicalSupport.Domain.Model.Aggregates;
 using Backend.TechnicalSupport.Domain.Model.Queries;
 using Backend.TechnicalSupport.Domain.Repositories;
 using Backend.TechnicalSupport.Domain.Services;

@@ -44,11 +44,12 @@ public class TechnicianController(ITechnicianCommandService commandService,
         var query = new GetAllTechnicianByGreatestStarsNumberQuery(); // Uses default values
         var result = await queryService.Handle(query);
 
-        if (result == null || !result.Any())
+        var technicians = result.ToList();
+        if (technicians.Count == 0)
             return NotFound("No technicians found with the specified criteria.");
 
         // Transform the result to TechnicianResource with the rounded Stars value
-        var resources = result.Select(TechnicianResourceFromEntityAssembler.ToResourceFromEntity);
+        var resources = technicians.Select(TechnicianResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(resources);
     }
     
@@ -79,7 +80,6 @@ public class TechnicianController(ITechnicianCommandService commandService,
     {
         var getTechnicianById = new GetTechnicianByIdQuery(id);
         var result = await queryService.Handle(getTechnicianById);
-        if (result is null) return NotFound();
         var resources = TechnicianResourceFromEntityAssembler.ToResourceFromEntity(result);
         return Ok(resources);
     }
@@ -95,8 +95,6 @@ public class TechnicianController(ITechnicianCommandService commandService,
     {
         var command = UpdateTechnicianCommandFromResourceAssembler.ToCommandFromResource(id, resource);
         var result = await commandService.Handle(command);
-    
-        if (result is null) return NotFound();
 
         return Ok(TechnicianResourceFromEntityAssembler.ToResourceFromEntity(result));
     }

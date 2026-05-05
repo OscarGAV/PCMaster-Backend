@@ -3,7 +3,7 @@ using Backend.Component.Interfaces.REST.Resources;
 
 namespace Backend.Component.Interfaces.REST.Transform;
 
-public class ComponentResourceFromEntityAssembler
+public static class ComponentResourceFromEntityAssembler
 {
         public static ComponentResource ToResource(Domain.Model.Aggregates.Component component)
         {

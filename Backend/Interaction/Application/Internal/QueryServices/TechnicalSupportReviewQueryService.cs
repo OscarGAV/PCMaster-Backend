@@ -5,17 +5,11 @@ using Backend.Interaction.Domain.Services;
 
 namespace Backend.Interaction.Application.Internal.QueryServices;
 
-public class TechnicalSupportReviewQueryService : ITechnicalSupportReviewQueryService
+public class TechnicalSupportReviewQueryService(ITechnicalSupportReviewRepository technicalSupportReviewRepository)
+    : ITechnicalSupportReviewQueryService
 {
-    private readonly ITechnicalSupportReviewRepository _technicalSupportReviewRepository;
-
-    public TechnicalSupportReviewQueryService(ITechnicalSupportReviewRepository technicalSupportReviewRepository)
-    {
-        _technicalSupportReviewRepository = technicalSupportReviewRepository;
-    }
-
     public async Task<IEnumerable<TechnicalSupportReview>> Handle(GetAllTechnicalSupportReviewsByTechnicalSupportIdQuery query)
     {
-        return await _technicalSupportReviewRepository.FindByTechnicalSupportIdAsync(query.TechnicalSupportId.TechSupportId);
+        return await technicalSupportReviewRepository.FindByTechnicalSupportIdAsync(query.TechnicalSupportId.TechSupportId);
     }
 }

@@ -1,6 +1,5 @@
 using System.Net.Mime;
 using Backend.IAM.Infrastructure.Pipeline.Middleware.Attributes;
-using Backend.Orders.Domain.Model.Aggregates;
 using Backend.Orders.Domain.Model.Commands;
 using Backend.Orders.Domain.Model.Queries;
 using Backend.Orders.Domain.Services;
@@ -34,7 +33,7 @@ public class CartController(
     [SwaggerResponse(400, "Cart was not created")]
     public async Task<ActionResult> CreateCart([FromBody] CreateCartResource resource)
     {
-        var command = CreateCartCommandFromResourceAssembler.toCommandFromResource(resource);
+        var command = CreateCartCommandFromResourceAssembler.ToCommandFromResource(resource);
         var result = await cartCommandService.Handle(command);
         if (result is null) return BadRequest();
         

@@ -64,8 +64,6 @@ public class ComponentReviewController(IComponentReviewCommandService componentR
     {
         var command = UpdateComponentReviewCommandFromResourceAssembler.ToCommandFromResource(id, resource);
         var result = await componentReviewCommandService.Handle(command);
-    
-        if (result is null) return NotFound();
 
         return Ok(ComponentReviewResourceFromEntityAssembler.ToResourceFromEntity(result));
     }

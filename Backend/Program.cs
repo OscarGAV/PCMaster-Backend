@@ -111,7 +111,7 @@ builder.Services.AddSwaggerGen(options =>
                     Type = ReferenceType.SecurityScheme
                 }
             },
-            Array.Empty<string>()
+            []
         }
     });
     options.EnableAnnotations();

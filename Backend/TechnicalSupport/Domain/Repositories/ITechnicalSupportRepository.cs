@@ -1,15 +1,14 @@
 using Backend.Shared.Domain.Repositories;
-using Backend.TechnicalSupport;
 
 namespace Backend.TechnicalSupport.Domain.Repositories;
 
-public interface ITechnicalSupportRepository : IBaseRepository<TechnicalSupport>
+public interface ITechnicalSupportRepository : IBaseRepository<Model.Aggregates.TechnicalSupport>
 {
-    Task<IEnumerable<TechnicalSupport>> FindBySupportTypeAsync(bool supportType);
+    Task<IEnumerable<Model.Aggregates.TechnicalSupport>> FindBySupportTypeAsync(bool supportType);
     
-    Task<TechnicalSupport?> FindBySupportTypeAndTechnicianIdAsync(bool supportType, string technicianId);
+    Task<Model.Aggregates.TechnicalSupport?> FindBySupportTypeAndTechnicianIdAsync(bool supportType, string technicianId);
     
-    Task UpdateAsync(TechnicalSupport technicalSupport);
+    Task UpdateAsync(Model.Aggregates.TechnicalSupport technicalSupport);
     
-    Task DeleteAsync(TechnicalSupport technicalSupport);
+    Task DeleteAsync(Model.Aggregates.TechnicalSupport technicalSupport);
 }

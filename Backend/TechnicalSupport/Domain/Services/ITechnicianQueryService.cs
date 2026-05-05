@@ -1,3 +1,4 @@
+using Backend.TechnicalSupport.Domain.Model.Aggregates;
 using Backend.TechnicalSupport.Domain.Model.Queries;
 
 namespace Backend.TechnicalSupport.Domain.Services;

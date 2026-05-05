@@ -1,5 +1,5 @@
 using Backend.Shared.Domain.Repositories;
-using Backend.TechnicalSupport;
+using Backend.TechnicalSupport.Domain.Model.Aggregates;
 
 namespace Backend.TechnicalSupport.Domain.Repositories;
 

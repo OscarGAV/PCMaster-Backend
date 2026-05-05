@@ -37,7 +37,7 @@ public class RequestAuthorizationMiddleware(RequestDelegate next)
     {
         Console.WriteLine("Entering InvokeAsync");
         var endpoint = context.Request.HttpContext.GetEndpoint();
-        var allowAnonymous = endpoint?.Metadata?.Any(m => m.GetType() == typeof(AllowAnonymousAttribute)) ?? false;
+        var allowAnonymous = endpoint?.Metadata.Any(m => m.GetType() == typeof(AllowAnonymousAttribute)) ?? false;
         Console.WriteLine($"AllowAnonymous: {allowAnonymous}");
         if (allowAnonymous)
         {

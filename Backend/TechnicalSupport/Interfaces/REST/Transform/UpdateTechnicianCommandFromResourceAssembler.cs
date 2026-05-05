@@ -3,7 +3,7 @@ using Backend.TechnicalSupport.Interfaces.REST.Resources;
 
 namespace Backend.TechnicalSupport.Interfaces.REST.Transform;
 
-public class UpdateTechnicianCommandFromResourceAssembler
+public static class UpdateTechnicianCommandFromResourceAssembler
 {
     public static UpdateTechnicianCommand ToCommandFromResource(int id, UpdateTechnicianResource resource)
     {

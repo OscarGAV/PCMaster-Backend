@@ -5,5 +5,5 @@ namespace Backend.IAM.Infrastructure.Tokens.JWT.Configuration;
 /// </summary>
 public class TokenSettings
 {
-    public string Secret { get; set; }
+    public required string Secret { get; init; }
 }

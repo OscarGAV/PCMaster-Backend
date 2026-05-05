@@ -1,6 +1,6 @@
 using Backend.TechnicalSupport.Domain.Model.Command;
 
-namespace Backend.TechnicalSupport;
+namespace Backend.TechnicalSupport.Domain.Model.Aggregates;
 
 public class Technician
 {

@@ -1,5 +1,6 @@
 using Backend.Shared.Domain.Repositories;
 using Backend.Shared.Infrastructure.Exceptions;
+using Backend.TechnicalSupport.Domain.Model.Aggregates;
 using Backend.TechnicalSupport.Domain.Model.Command;
 using Backend.TechnicalSupport.Domain.Repositories;
 using Backend.TechnicalSupport.Domain.Services;

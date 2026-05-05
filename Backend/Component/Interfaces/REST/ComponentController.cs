@@ -5,7 +5,6 @@ using Backend.Component.Interfaces.REST.Resources;
 using Backend.Component.Interfaces.REST.Transform;
 using Backend.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Backend.Component.Interfaces.REST;
@@ -33,7 +32,7 @@ public class ComponentController(
     public async Task<IActionResult> CreateComponent([FromBody] CreateComponentResource resource)
     {
         var createComponentCommand = CreateComponentCommandFromResourceAssembler.ToCommand(resource);
-        var component = await componentCommandService.Handle(createComponentCommand);
+        var component = await _componentCommandService.Handle(createComponentCommand);
         if (component is null)
         {
             return BadRequest("No se pudo crear el componente. Verifique los datos proporcionados.");

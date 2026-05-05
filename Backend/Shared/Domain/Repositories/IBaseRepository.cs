@@ -29,7 +29,7 @@ public interface IBaseRepository<TEntity>
     void Remove(TEntity entity);
     
     /// <summary>
-    /// Find entity by Id
+    /// Find entity by ID
     /// </summary>
     /// <param name="id">The entity ID to find</param>
     /// <returns>Entity object if found</returns>
