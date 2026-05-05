@@ -1,4 +1,5 @@
 using Backend.Shared.Domain.Repositories;
+using Backend.Shared.Infrastructure.Exceptions;
 using Backend.TechnicalSupport.Domain.Model.Command;
 using Backend.TechnicalSupport.Domain.Repositories;
 using Backend.TechnicalSupport.Domain.Services;
@@ -10,24 +11,32 @@ public class TechnicianCommandService(ITechnicianRepository technicianRepository
 {
     public async Task<Technician?> Handle(CreateTechnicianCommand command)
     {
-        // Check if a Technician entity with the given Name already exists
-        var technician = 
-            await technicianRepository.FindByNameAsync(command.Name);
+        if (string.IsNullOrWhiteSpace(command.Name))
+            throw new ValidationException("Technician name cannot be empty");
+
+        if (command.Name.Length > 100)
+            throw new ValidationException("Technician name must be at most 100 characters");
+
+        if (string.IsNullOrWhiteSpace(command.Img))
+            throw new ValidationException("Technician image URL cannot be empty");
+
+        if (command.Img.Length > 200)
+            throw new ValidationException("Technician image URL must be at most 200 characters");
+
+        var technician = await technicianRepository.FindByNameAsync(command.Name);
         if (technician != null) 
-            throw new Exception($"Technician entity with name '{command.Name}' already exists.");
-        // Create a new Technician entity from the command data
+            throw new DuplicateEntityException($"Technician entity with name '{command.Name}' already exists");
+
         technician = new Technician(command);
 
         try
         {
-            // Add the new Technician entity to the repository and complete the transaction
             await technicianRepository.AddAsync(technician);
             await unitOfWork.CompleteAsync();
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            throw new Exception($"An error occurred while creating the technician: {e.Message}");
         }
 
         return technician;
@@ -35,27 +44,36 @@ public class TechnicianCommandService(ITechnicianRepository technicianRepository
     
     public async Task<Technician> Handle(UpdateTechnicianCommand command)
     {
-        // Retrieve the existing Technician entity by Id
+        if (command.Id <= 0)
+            throw new ValidationException("Id must be a positive number");
+
+        if (string.IsNullOrWhiteSpace(command.Name))
+            throw new ValidationException("Technician name cannot be empty");
+
+        if (command.Name.Length > 100)
+            throw new ValidationException("Technician name must be at most 100 characters");
+
+        if (string.IsNullOrWhiteSpace(command.Img))
+            throw new ValidationException("Technician image URL cannot be empty");
+
+        if (command.Img.Length > 200)
+            throw new ValidationException("Technician image URL must be at most 200 characters");
+
         var technician = await technicianRepository.FindByIdAsync(command.Id);
 
         if (technician == null)
-        {
-            throw new Exception($"Technician with Id {command.Id} does not exist.");
-        }
+            throw new NotFoundException($"Technician with Id {command.Id} does not exist");
 
-        // Update the properties of the Technician entity based on the command data
         technician.UpdateProperties(command);
 
         try
         {
-            // Save the updated Technician entity to the repository and complete the transaction
             await technicianRepository.UpdateAsync(technician);
             await unitOfWork.CompleteAsync();
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            throw new Exception($"An error occurred while updating the technician: {e.Message}");
         }
 
         return technician;
@@ -63,14 +81,14 @@ public class TechnicianCommandService(ITechnicianRepository technicianRepository
     
     public async Task<bool> Handle(DeleteTechnicianCommand command)
     {
-        // Retrieve the Technician entity to be deleted
+        if (command.Id <= 0)
+            throw new ValidationException("Id must be a positive number");
+
         var technician = await technicianRepository.FindByIdAsync(command.Id);
         if (technician == null)
-        {
-            return false; // Not found
-        }
+            return false;
 
-        await technicianRepository.DeleteAsync(technician); // Perform the deletion
-        return true; // Successfully deleted
+        await technicianRepository.DeleteAsync(technician);
+        return true;
     }
 }

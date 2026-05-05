@@ -25,6 +25,7 @@ using Backend.Shared.Domain.Repositories;
 using Backend.Shared.Infrastructure.Interfaces.ASAP.Configuration;
 using Backend.Shared.Infrastructure.Persistence.EFC.Configuration;
 using Backend.Shared.Infrastructure.Persistence.EFC.Repositories;
+using Backend.Shared.Infrastructure.Pipeline.Middleware;
 using Backend.TechnicalSupport.Application.Internal.CommandServices;
 using Backend.TechnicalSupport.Application.Internal.QueryServices;
 using Backend.TechnicalSupport.Domain.Repositories;
@@ -220,6 +221,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline
+app.UseExceptionHandling();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 

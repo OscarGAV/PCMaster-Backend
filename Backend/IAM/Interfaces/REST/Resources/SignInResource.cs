@@ -1,12 +1,14 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Backend.IAM.Interfaces.REST.Resources;
 
-/// <summary>
-/// SignInResource 
-/// </summary>
-/// <param name="UserName">
-/// The username of the user.
-/// </param>
-/// <param name="Password">
-/// The password of the user.
-/// </param>
-public record SignInResource(string UserName, string Password);
+public record SignInResource(
+    [Required(ErrorMessage = "Username is required")]
+    [MinLength(3, ErrorMessage = "Username must be at least 3 characters")]
+    [MaxLength(30, ErrorMessage = "Username must be at most 30 characters")]
+    string UserName,
+
+    [Required(ErrorMessage = "Password is required")]
+    [MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
+    string Password
+);

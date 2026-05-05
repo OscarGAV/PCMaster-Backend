@@ -3,32 +3,31 @@ using Backend.Interaction.Domain.Model.Commands;
 using Backend.Interaction.Domain.Repositories;
 using Backend.Interaction.Domain.Services;
 using Backend.Shared.Domain.Repositories;
+using Backend.Shared.Infrastructure.Exceptions;
 
 namespace Backend.Interaction.Application.Internal.CommandServices;
-/// <summary>
-/// Initializes a new instance of the <see cref="TechnicalSupportReviewCommandService"/> class.
-/// </summary>
-/// <param name="technicalSupportRepository">Repository for managing technical support reviews.</param>
-/// <param name="unitOfWork"></param>
+
 public class TechnicalSupportReviewCommandService(ITechnicalSupportReviewRepository technicalSupportReviewRepository,
     IUnitOfWork unitOfWork)
     : ITechnicalSupportReviewCommandService
 {
-    /// <summary>
-    /// Handles the creation of a new technical support review.
-    /// </summary>
-    /// <param name="command">The command containing the necessary data to create the technical support review.</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation. The result contains the created technical support review, 
-    /// or <c>null</c> if it could not be created.
-    /// </returns>
     public async Task<TechnicalSupportReview?> Handle(CreateTechnicalSupportReviewCommand command)
     {
-        // Validar el rango del Rating
         if (command.Rating < 1 || command.Rating > 5)
-        {
-            throw new ArgumentException("Rating must be between 1 and 5.", nameof(command.Rating));
-        }
+            throw new ValidationException("Rating must be between 1 and 5");
+
+        if (string.IsNullOrWhiteSpace(command.Comment))
+            throw new ValidationException("Comment cannot be empty");
+
+        if (command.Comment.Length > 150)
+            throw new ValidationException("Comment must be at most 150 characters");
+
+        if (string.IsNullOrWhiteSpace(command.UserName))
+            throw new ValidationException("UserName cannot be empty");
+
+        if (command.TechnicalSupportId <= 0)
+            throw new ValidationException("TechnicalSupportId must be a positive number");
+
         var reviewTechnicalSupport = new TechnicalSupportReview(command);
         await technicalSupportReviewRepository.AddAsync(reviewTechnicalSupport);
         await unitOfWork.CompleteAsync();
@@ -40,15 +39,16 @@ public class TechnicalSupportReviewCommandService(ITechnicalSupportReviewReposit
         var technicalSupportReview = await technicalSupportReviewRepository.FindByIdAsync(command.Id);
 
         if (technicalSupportReview == null)
-        {
-            throw new Exception($"TechnicalSupportReview with Id {command.Id} does not exist.");
-        }
-        
-        // Validar el rango del Rating
+            throw new NotFoundException($"TechnicalSupportReview with Id {command.Id} does not exist");
+
         if (command.Rating < 1 || command.Rating > 5)
-        {
-            throw new ArgumentException("Rating must be between 1 and 5.", nameof(command.Rating));
-        }
+            throw new ValidationException("Rating must be between 1 and 5");
+
+        if (string.IsNullOrWhiteSpace(command.Comment))
+            throw new ValidationException("Comment cannot be empty");
+
+        if (command.Comment.Length > 150)
+            throw new ValidationException("Comment must be at most 150 characters");
 
         technicalSupportReview.Update(command);
 
@@ -59,8 +59,7 @@ public class TechnicalSupportReviewCommandService(ITechnicalSupportReviewReposit
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            throw new Exception($"An error occurred while updating the technical support review: {e.Message}");
         }
 
         return technicalSupportReview;
@@ -68,11 +67,12 @@ public class TechnicalSupportReviewCommandService(ITechnicalSupportReviewReposit
 
     public async Task<bool> Handle(DeleteTechnicalSupportReviewCommand command)
     {
+        if (command.Id <= 0)
+            throw new ValidationException("Id must be a positive number");
+
         var technicalSupportReview = await technicalSupportReviewRepository.FindByIdAsync(command.Id);
         if (technicalSupportReview == null)
-        {
             return false;
-        }
 
         await technicalSupportReviewRepository.DeleteAsync(technicalSupportReview);
         return true;

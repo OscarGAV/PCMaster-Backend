@@ -48,22 +48,11 @@ public class AuthenticationController(IUserCommandService userCommandService) : 
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid credentials")]
     public async Task<IActionResult> SignIn([FromBody] SignInResource resource)
     {
-        try
-        {
-            var signInCommand = SignInCommandFromResourceAssembler.ToCommandFromResource(resource);
-            var authenticatedUser = await userCommandService.Handle(signInCommand);
-            var authenticatedUserResource = AuthenticatedUserResourceFromEntityAssembler
-                .ToResourceFromEntity(authenticatedUser.user, authenticatedUser.token);
-            return Ok(authenticatedUserResource);
-        }
-        catch (Exception e) when (e.Message.Contains("not found"))
-        {
-            return NotFound(new { message = e.Message });
-        }
-        catch (Exception e) when (e.Message.Contains("Invalid password"))
-        {
-            return BadRequest(new { message = e.Message });
-        }
+        var signInCommand = SignInCommandFromResourceAssembler.ToCommandFromResource(resource);
+        var authenticatedUser = await userCommandService.Handle(signInCommand);
+        var authenticatedUserResource = AuthenticatedUserResourceFromEntityAssembler
+            .ToResourceFromEntity(authenticatedUser.user, authenticatedUser.token);
+        return Ok(authenticatedUserResource);
     }
 
     /// <summary>
@@ -88,15 +77,8 @@ public class AuthenticationController(IUserCommandService userCommandService) : 
     [SwaggerResponse(StatusCodes.Status409Conflict, "Username already exists")]
     public async Task<IActionResult> SignUp([FromBody] SignUpResource resource)
     {
-        try
-        {
-            var signUpCommand = SignUpCommandFromResourceAssembler.ToCommandFromResource(resource);
-            await userCommandService.Handle(signUpCommand);
-            return Ok(new { message = "User created successfully" });
-        }
-        catch (Exception e) when (e.Message.Contains("already exists"))
-        {
-            return Conflict(new { message = e.Message });
-        }
+        var signUpCommand = SignUpCommandFromResourceAssembler.ToCommandFromResource(resource);
+        await userCommandService.Handle(signUpCommand);
+        return Ok(new { message = "User created successfully" });
     }
 }

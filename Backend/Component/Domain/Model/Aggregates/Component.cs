@@ -31,6 +31,15 @@ public partial class Component
         string model, string color, string dimensions, 
         string material, string weight, string categoryType, string categorySubType, string categoryBrand, string country)
     {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Component name cannot be empty", nameof(name));
+
+        if (price < 0)
+            throw new ArgumentOutOfRangeException(nameof(price), "Price must be greater than or equal to 0");
+
+        if (stock < 0)
+            throw new ArgumentOutOfRangeException(nameof(stock), "Stock must be greater than or equal to 0");
+
         Name = name;
         Description = description;
         Price = price;
