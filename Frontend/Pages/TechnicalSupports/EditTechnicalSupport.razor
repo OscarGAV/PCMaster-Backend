@@ -1,0 +1,98 @@
+@page "/technical-supports/{Id:int}/edit"
+@attribute [Authorize]
+
+<PageTitle>Editar Ticket - PC Master</PageTitle>
+
+<div class="page-header">
+    <a href="/technical-supports/@Id" class="btn-link-sm">&larr; Volver</a>
+    <h1>Editar Ticket</h1>
+</div>
+
+@if (isLoading)
+{
+    <div class="loading">Cargando...</div>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
+else if (model is not null)
+{
+    <div class="form-container">
+        <EditForm Model="model" OnValidSubmit="HandleUpdate" FormName="edit-ts-form">
+            <div class="form-group">
+                <label for="techId">ID Técnico</label>
+                <InputText id="techId" @bind-Value="model.TechnicianId" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="supportType">Presencial</label>
+                <InputCheckbox id="supportType" @bind-Value="model.SupportType" />
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label for="dateRequest">Fecha Solicitud</label><InputDate id="dateRequest" @bind-Value="model.DateOfRequest" class="form-control" /></div>
+                <div class="form-group"><label for="startDate">Inicio</label><InputDate id="startDate" @bind-Value="model.StartDate" class="form-control" /></div>
+                <div class="form-group"><label for="endDate">Fin</label><InputDate id="endDate" @bind-Value="model.EndDate" class="form-control" /></div>
+            </div>
+            <button type="submit" class="btn-primary" disabled="@isSaving">@(isSaving ? "Guardando..." : "Guardar Cambios")</button>
+        </EditForm>
+    </div>
+}
+
+@code {
+    [Inject] private ITechnicalSupportService TsService { get; set; } = default!;
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+    [Parameter] public int Id { get; set; }
+
+    private UpdateTechnicalSupportRequest? model;
+    private string? errorMessage;
+    private bool isLoading = true;
+    private bool isSaving;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var ticket = await TsService.GetByIdAsync(Id);
+            if (ticket is not null)
+            {
+                model = new UpdateTechnicalSupportRequest
+                {
+                    TechnicianId = ticket.TechnicianId,
+                    SupportType = ticket.SupportType,
+                    DateOfRequest = ticket.DateOfRequest,
+                    StartDate = ticket.StartDate,
+                    EndDate = ticket.EndDate
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task HandleUpdate()
+    {
+        if (model is null) return;
+        errorMessage = null;
+        isSaving = true;
+        try
+        {
+            await TsService.UpdateAsync(Id, model);
+            Navigation.NavigateTo("/technical-supports");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+}

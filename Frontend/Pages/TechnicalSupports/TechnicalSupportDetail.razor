@@ -1,0 +1,77 @@
+@page "/technical-supports/{Id:int}"
+
+<PageTitle>Detalle Ticket - PC Master</PageTitle>
+
+@if (isLoading)
+{
+    <div class="loading">Cargando...</div>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
+else if (ticket is not null)
+{
+    <div class="page-header">
+        <a href="/technical-supports" class="btn-link-sm">&larr; Volver</a>
+    </div>
+    <div class="detail-container">
+        <div class="detail-info" style="max-width:600px;">
+            <h1>Ticket #@ticket.Id</h1>
+            <span class="badge @(ticket.SupportType ? "badge-home" : "badge-zoom")">
+                @(ticket.SupportType ? "Presencial" : "Remoto")
+            </span>
+            <div class="specs-grid" style="margin-top:1rem;">
+                <div class="spec-item"><span>Técnico ID:</span> @ticket.TechnicianId</div>
+                <div class="spec-item"><span>Fecha Solicitud:</span> @ticket.DateOfRequest.ToString("dd/MM/yyyy")</div>
+                <div class="spec-item"><span>Inicio:</span> @ticket.StartDate.ToString("dd/MM/yyyy HH:mm")</div>
+                <div class="spec-item"><span>Fin:</span> @ticket.EndDate.ToString("dd/MM/yyyy HH:mm")</div>
+            </div>
+            <div class="detail-actions" style="margin-top:1.5rem;">
+                <a href="/technical-supports/@ticket.Id/edit" class="btn-primary">Editar</a>
+                <button class="btn-danger" @onclick="HandleDelete">Eliminar</button>
+                <a href="/technical-support-reviews/@ticket.Id" class="btn-outline">Ver Reseñas</a>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Inject] private ITechnicalSupportService TsService { get; set; } = default!;
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+    [Parameter] public int Id { get; set; }
+
+    private TechnicalSupportDto? ticket;
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            ticket = await TsService.GetByIdAsync(Id);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task HandleDelete()
+    {
+        try
+        {
+            await TsService.DeleteAsync(Id);
+            Navigation.NavigateTo("/technical-supports");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+    }
+}

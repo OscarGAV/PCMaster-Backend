@@ -3,6 +3,7 @@ using Backend.Component.Domain.Model.Queries;
 using Backend.Component.Domain.Services;
 using Backend.Component.Interfaces.REST.Resources;
 using Backend.Component.Interfaces.REST.Transform;
+using Backend.IAM.Domain.Model.ValueObjects;
 using Backend.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -10,7 +11,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Backend.Component.Interfaces.REST;
 
 [ApiController]
-[Authorize] //Esto es el locker del IAM
+[Authorize]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)] 
 [Tags("Component")]
@@ -23,6 +24,7 @@ public class ComponentController(
     private readonly IComponentQueryService _componentQueryService = componentQueryService;
 
     [HttpPost]
+    [Authorize(AllowedRoles = [ERole.ROLE_CLIENTE])]
     [SwaggerOperation(
         Summary = "Create a new component",
         Description = "Create a new component",
@@ -68,7 +70,7 @@ public class ComponentController(
     public async Task<IActionResult> GetAllComponents()
     {
         var components = await _componentQueryService.Handle(new GetAllComponentsQuery());
-        var resources = components.Select(ComponentResourceFromEntityAssembler.ToResource).ToList();  // Asegúrate de llamar a ToList() para materializar el enumerable
+        var resources = components.Select(ComponentResourceFromEntityAssembler.ToResource).ToList();
         return Ok(resources);
     }
 }

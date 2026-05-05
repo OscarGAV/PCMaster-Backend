@@ -1,16 +1,8 @@
 using System.ComponentModel.DataAnnotations;
+using Backend.IAM.Domain.Model.ValueObjects;
 
 namespace Backend.IAM.Domain.Model.Aggregates;
 
-/// <summary>
-/// User aggregate root 
-/// </summary>
-/// <param name="username">
-/// The username of the user
-/// </param>
-/// <param name="passwordHash">
-/// The password hash of the user
-/// </param>
 public class User(string username, string passwordHash)
 {
     public int Id { get; }
@@ -20,4 +12,8 @@ public class User(string username, string passwordHash)
     
     [MaxLength(255, ErrorMessage = "Password hash must be at most 255 characters")]
     public string PasswordHash { get; private set; } = passwordHash;
+
+    public ICollection<UserRole> UserRoles { get; } = new List<UserRole>();
+
+    public bool HasRole(ERole role) => UserRoles.Any(r => r.Role == role.ToString());
 }

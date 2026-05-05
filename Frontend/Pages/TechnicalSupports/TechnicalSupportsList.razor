@@ -1,0 +1,152 @@
+@page "/technical-supports"
+@attribute [Authorize]
+
+<PageTitle>Soporte Técnico - PC Master</PageTitle>
+
+<div class="page-header">
+    <h1>Soporte Técnico</h1>
+    <p>Gestión de tickets de soporte técnico.</p>
+    <a href="/technical-supports/create" class="btn-primary">Nuevo Ticket</a>
+</div>
+
+<div class="filter-bar">
+    <label>
+        <input type="checkbox" @bind="filterHome" @bind:after="ApplyFilter" />
+        Presencial
+    </label>
+    <label>
+        <input type="checkbox" @bind="filterZoom" @bind:after="ApplyFilter" />
+        Remoto
+    </label>
+    <button class="btn-link-sm" @onclick="ClearFilter">Limpiar Filtros</button>
+</div>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
+@if (isLoading)
+{
+    <div class="loading">Cargando tickets...</div>
+}
+else
+{
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Técnico ID</th>
+                    <th>Tipo</th>
+                    <th>Fecha Solicitud</th>
+                    <th>Inicio</th>
+                    <th>Fin</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!tickets.Any())
+                {
+                    <tr><td colspan="7" class="empty-message">No hay tickets de soporte.</td></tr>
+                }
+                @foreach (var t in tickets)
+                {
+                    <tr>
+                        <td>@t.Id</td>
+                        <td>@t.TechnicianId</td>
+                        <td>
+                            <span class="badge @(t.SupportType ? "badge-home" : "badge-zoom")">
+                                @(t.SupportType ? "Presencial" : "Remoto")
+                            </span>
+                        </td>
+                        <td>@t.DateOfRequest.ToString("dd/MM/yyyy")</td>
+                        <td>@t.StartDate.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@t.EndDate.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>
+                            <a href="/technical-supports/@t.Id" class="btn-link-sm">Ver</a>
+                            <a href="/technical-supports/@t.Id/edit" class="btn-link-sm">Editar</a>
+                            <button class="btn-link-sm btn-danger" @onclick="() => DeleteTicket(t.Id)">Eliminar</button>
+                            <a href="/technical-support-reviews/@t.Id" class="btn-link-sm">Reseñas</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    [Inject] private ITechnicalSupportService TsService { get; set; } = default!;
+
+    private List<TechnicalSupportDto> tickets = new();
+    private bool isLoading = true;
+    private string? errorMessage;
+    private bool filterHome;
+    private bool filterZoom;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAll();
+    }
+
+    private async Task LoadAll()
+    {
+        isLoading = true;
+        try
+        {
+            tickets = await TsService.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task ApplyFilter()
+    {
+        if (!filterHome && !filterZoom)
+        {
+            await LoadAll();
+            return;
+        }
+        isLoading = true;
+        try
+        {
+            tickets = new();
+            if (filterHome) tickets.AddRange(await TsService.GetFilteredAsync(true));
+            if (filterZoom) tickets.AddRange(await TsService.GetFilteredAsync(false));
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task ClearFilter()
+    {
+        filterHome = false;
+        filterZoom = false;
+        await LoadAll();
+    }
+
+    private async Task DeleteTicket(int id)
+    {
+        try
+        {
+            await TsService.DeleteAsync(id);
+            await LoadAll();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+    }
+}

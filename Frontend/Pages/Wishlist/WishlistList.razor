@@ -1,0 +1,107 @@
+@page "/wishlist"
+@page "/wishlist/user/{UserId:int}"
+
+<PageTitle>Wishlist - PC Master</PageTitle>
+
+<div class="page-header">
+    <h1>Wishlist</h1>
+    <a href="/wishlist/create" class="btn-primary">Agregar a Wishlist</a>
+</div>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
+@if (isLoading)
+{
+    <div class="loading">Cargando wishlist...</div>
+}
+else
+{
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuario ID</th>
+                    <th>Componente ID</th>
+                    <th>Cantidad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!items.Any())
+                {
+                    <tr><td colspan="5" class="empty-message">No hay elementos en la wishlist.</td></tr>
+                }
+                @foreach (var w in items)
+                {
+                    <tr>
+                        <td>@w.Id</td>
+                        <td>@w.UserId</td>
+                        <td><a href="/components/@w.ComponentId">@w.ComponentId</a></td>
+                        <td>@w.Quantity</td>
+                        <td>
+                            <a href="/wishlist/@w.Id/edit" class="btn-link-sm">Editar</a>
+                            <button class="btn-link-sm btn-danger" @onclick="() => DeleteItem(w.Id)">Eliminar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    [Inject] private IWishlistService WishlistService { get; set; } = default!;
+
+    [Parameter] public int? UserId { get; set; }
+
+    private List<WishlistDto> items = new();
+    private bool isLoading = true;
+    private string? errorMessage;
+    private string? successMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        isLoading = true;
+        try
+        {
+            if (UserId.HasValue && UserId > 0)
+                items = await WishlistService.GetByUserIdAsync(UserId.Value);
+            else
+                items = new();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task DeleteItem(int id)
+    {
+        try
+        {
+            await WishlistService.DeleteAsync(id);
+            successMessage = "Elemento eliminado.";
+            await LoadData();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+    }
+}

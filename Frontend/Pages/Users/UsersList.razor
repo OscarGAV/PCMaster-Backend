@@ -1,0 +1,77 @@
+@page "/users"
+@attribute [Authorize]
+
+<PageTitle>Usuarios - PC Master</PageTitle>
+
+<div class="page-header">
+    <h1>Usuarios</h1>
+    <p>Lista de todos los usuarios registrados en la plataforma.</p>
+</div>
+
+@if (isLoading)
+{
+    <div class="loading">Cargando usuarios...</div>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
+else
+{
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!users.Any())
+                {
+                    <tr><td colspan="3" class="empty-message">No hay usuarios registrados.</td></tr>
+                }
+                @foreach (var user in users)
+                {
+                    <tr>
+                        <td>@user.Id</td>
+                        <td>@user.Username</td>
+                        <td>
+                            <a href="/cart/user/@user.Id" class="btn-link-sm">Ver Carrito</a>
+                            <a href="/wishlist/user/@user.Id" class="btn-link-sm">Ver Wishlist</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    [Inject] private IUserService UserService { get; set; } = default!;
+
+    private List<UserDto> users = new();
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            users = await UserService.GetAllAsync();
+        }
+        catch (HttpRequestException)
+        {
+            errorMessage = "Error de conexión con el servidor.";
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

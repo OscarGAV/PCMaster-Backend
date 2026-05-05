@@ -1,0 +1,58 @@
+@page "/component-reviews/{Id:int}/edit"
+
+<PageTitle>Editar Reseña - PC Master</PageTitle>
+
+<div class="page-header">
+    <h1>Editar Reseña</h1>
+</div>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
+
+<div class="form-container">
+    <EditForm Model="model" OnValidSubmit="HandleUpdate" FormName="edit-cr-form">
+        <div class="form-group">
+            <label for="rating">Calificación (1-5)</label>
+            <InputNumber id="rating" @bind-Value="model.Rating" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="comment">Comentario</label>
+            <InputTextArea id="comment" @bind-Value="model.Comment" class="form-control" rows="3" />
+        </div>
+        <button type="submit" class="btn-primary" disabled="@isSaving">
+            @(isSaving ? "Guardando..." : "Guardar Cambios")
+        </button>
+    </EditForm>
+</div>
+
+@code {
+    [Inject] private IComponentReviewService ReviewService { get; set; } = default!;
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+    [Parameter] public int Id { get; set; }
+
+    private UpdateComponentReviewRequest model = new();
+    private string? errorMessage;
+    private bool isSaving;
+
+    private async Task HandleUpdate()
+    {
+        errorMessage = null;
+        isSaving = true;
+        try
+        {
+            await ReviewService.UpdateAsync(Id, model);
+            Navigation.NavigateTo("/components");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+}

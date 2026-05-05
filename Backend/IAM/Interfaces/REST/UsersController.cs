@@ -1,5 +1,6 @@
 using System.Net.Mime;
 using Backend.IAM.Domain.Model.Queries;
+using Backend.IAM.Domain.Model.ValueObjects;
 using Backend.IAM.Domain.Services;
 using Backend.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 using Backend.IAM.Interfaces.REST.Resources;
@@ -9,15 +10,6 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Backend.IAM.Interfaces.REST;
 
-/// <summary>
-/// Available User endpoints 
-/// </summary>
-/// <remarks>
-/// Available User endpoints. This controller is responsible for handling user related requests.
-/// </remarks>
-/// <param name="userQueryService">
-/// <see cref="IUserQueryService"/> User query service
-/// </param>
 [Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
@@ -25,19 +17,6 @@ namespace Backend.IAM.Interfaces.REST;
 [SwaggerTag("Available User endpoints")]
 public class UsersController(IUserQueryService userQueryService) : ControllerBase
 {
-    /// <summary>
-    /// Get user by id 
-    /// </summary>
-    /// <remarks>
-    /// Get user by id. This endpoint is responsible for getting a user by id.
-    /// </remarks>
-    /// <param name="id">
-    /// <see cref="int"/> User id
-    /// </param>
-    /// <returns>
-    /// <see cref="IActionResult"/> with the <see cref="UserResource"/> user, if found.
-    /// It returns <see cref="NotFoundResult"/> if the user is not found. 
-    /// </returns>
     [HttpGet("{id:int}")]
     [SwaggerOperation(
         Summary ="Get user by id",
@@ -54,16 +33,8 @@ public class UsersController(IUserQueryService userQueryService) : ControllerBas
         return Ok(userResource);
     }
 
-    /// <summary>
-    /// Get all users 
-    /// </summary>
-    /// <remarks>
-    /// Get all users. This endpoint is responsible for getting all users.
-    /// </remarks>
-    /// <returns>
-    /// <see cref="IActionResult"/> with the <see cref="IEnumerable{UserResource}"/> users.
-    /// </returns>
     [HttpGet]
+    [Authorize(AllowedRoles = [ERole.ROLE_TECNICO])]
     [SwaggerOperation(
         Summary = "Get all users",
         Description = "Get all users",

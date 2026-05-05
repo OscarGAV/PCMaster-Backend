@@ -1,0 +1,86 @@
+@page "/components/{ComponentId:int}"
+
+<PageTitle>Componente - PC Master</PageTitle>
+
+@if (isLoading)
+{
+    <div class="loading">Cargando componente...</div>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
+else if (component is not null)
+{
+    <div class="page-header">
+        <a href="/components" class="btn-link-sm">&larr; Volver a Componentes</a>
+    </div>
+    <div class="detail-container">
+        <div class="detail-image-section">
+            <img src="@component.Image" alt="@component.Name" onerror="this.onerror=null;this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22400%22><rect fill=%22%23d1f2ff%22 width=%22400%22 height=%22400%22/><text fill=%22%23001014%22 x=%22130%22 y=%22210%22 font-size=%2220%22>Sin Imagen</text></svg>'" />
+        </div>
+        <div class="detail-info">
+            <span class="detail-category">@component.CategoryType / @component.CategorySubType</span>
+            <h1>@component.Name</h1>
+            <p class="detail-description">@component.Description</p>
+            <div class="detail-price">S/ @component.Price.ToString("N2")</div>
+            <div class="detail-stock @(component.Stock > 0 ? "in-stock" : "out-stock")">
+                @(component.Stock > 0 ? $"{component.Stock} en stock" : "Agotado")
+            </div>
+
+            <div class="detail-specs">
+                <h3>Especificaciones</h3>
+                <div class="specs-grid">
+                    <div class="spec-item"><span>Marca:</span> @component.CategoryBrand</div>
+                    <div class="spec-item"><span>Modelo:</span> @component.Model</div>
+                    <div class="spec-item"><span>Color:</span> @component.Color</div>
+                    <div class="spec-item"><span>Material:</span> @component.Material</div>
+                    <div class="spec-item"><span>Dimensiones:</span> @component.Dimensions</div>
+                    <div class="spec-item"><span>Peso:</span> @component.Weight</div>
+                    <div class="spec-item"><span>Proveedor ID:</span> @component.ProviderId</div>
+                    <div class="spec-item"><span>País:</span> @component.Country</div>
+                </div>
+            </div>
+
+            <div class="detail-rating">
+                <h3>Calificación</h3>
+                @for (int i = 0; i < 5; i++)
+                {
+                    <span class="star large @(i < component.Ratings ? "filled" : "")">&#9733;</span>
+                }
+            </div>
+
+            <a href="/component-reviews/@component.ComponentId" class="btn-primary">Ver Reseñas</a>
+        </div>
+    </div>
+}
+
+@code {
+    [Inject] private IComponentService ComponentService { get; set; } = default!;
+
+    [Parameter] public int ComponentId { get; set; }
+
+    private ComponentDto? component;
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            component = await ComponentService.GetByIdAsync(ComponentId);
+        }
+        catch (HttpRequestException)
+        {
+            errorMessage = "Error de conexión con el servidor.";
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

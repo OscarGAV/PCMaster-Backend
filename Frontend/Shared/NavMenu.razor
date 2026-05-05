@@ -1,0 +1,43 @@
+@using Microsoft.AspNetCore.Components.Authorization
+
+<nav class="navbar">
+    <div class="navbar-container">
+        <a href="/" class="navbar-brand">
+            <span class="brand-icon">&#9881;</span>
+            <span class="brand-text">PC Master</span>
+        </a>
+
+        <div class="navbar-links">
+            <a href="/components" class="nav-link">Componentes</a>
+            <a href="/technicians" class="nav-link">Técnicos</a>
+            <a href="/technical-supports" class="nav-link">Soporte Técnico</a>
+            <a href="/cart" class="nav-link">Carrito</a>
+            <a href="/wishlist" class="nav-link">Wishlist</a>
+            <a href="/users" class="nav-link">Usuarios</a>
+        </div>
+
+        <div class="navbar-actions">
+            <AuthorizeView>
+                <Authorized>
+                    <span class="nav-greeting">Hola, @context.User.Identity?.Name</span>
+                    <button class="btn-logout" @onclick="Logout">Salir</button>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="/authentication/sign-in" class="btn-login">Iniciar Sesión</a>
+                    <a href="/authentication/sign-up" class="btn-signup">Registrarse</a>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+    </div>
+</nav>
+
+@code {
+    [Inject] private IAuthenticationService AuthService { get; set; } = default!;
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/", forceLoad: true);
+    }
+}

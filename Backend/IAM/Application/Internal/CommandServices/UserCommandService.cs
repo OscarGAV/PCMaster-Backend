@@ -1,6 +1,7 @@
 using Backend.IAM.Application.Internal.OutboundServices;
 using Backend.IAM.Domain.Model.Aggregates;
 using Backend.IAM.Domain.Model.Commands;
+using Backend.IAM.Domain.Model.ValueObjects;
 using Backend.IAM.Domain.Repositories;
 using Backend.IAM.Domain.Services;
 using Backend.Shared.Domain.Repositories;
@@ -31,6 +32,7 @@ public class UserCommandService(
 
         var hashedPassword = hashingService.HashPassword(command.Password);
         var user = new User(command.Username, hashedPassword);
+        user.UserRoles.Add(new UserRole(command.Role));
         try
         {
             await userRepository.AddAsync(user);

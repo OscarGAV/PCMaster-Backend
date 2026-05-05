@@ -1,0 +1,33 @@
+<div class="tech-card">
+    <div class="tech-card-header">
+        <img src="@tech.Img" alt="@tech.Name" class="tech-image" />
+        <span class="tech-status @(tech.Status ? "available" : "unavailable")">
+            @(tech.Status ? "Disponible" : "No Disponible")
+        </span>
+    </div>
+    <div class="tech-card-body">
+        <h3>@tech.Name</h3>
+        <div class="tech-stars">
+            @for (int i = 0; i < 5; i++)
+            {
+                <span class="star @(i < tech.Stars ? "filled" : "")">&#9733;</span>
+            }
+            <span class="star-value">@tech.Stars.ToString("0.0")</span>
+        </div>
+    </div>
+    <div class="tech-card-footer">
+        <a href="/technicians/@tech.Id" class="btn-link-sm">Ver Perfil</a>
+        <a href="/technicians/@tech.Id/edit" class="btn-link-sm">Editar</a>
+        <button class="btn-link-sm btn-danger" @onclick="HandleDelete">Eliminar</button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public TechnicianDto tech { get; set; } = default!;
+    [Parameter] public EventCallback<int> OnDelete { get; set; }
+
+    private async Task HandleDelete()
+    {
+        await OnDelete.InvokeAsync(tech.Id);
+    }
+}

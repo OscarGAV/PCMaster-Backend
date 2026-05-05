@@ -1,0 +1,80 @@
+@page "/technicians/{Id:int}"
+
+<PageTitle>Detalle Técnico - PC Master</PageTitle>
+
+@if (isLoading)
+{
+    <div class="loading">Cargando...</div>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
+else if (tech is not null)
+{
+    <div class="page-header">
+        <a href="/technicians" class="btn-link-sm">&larr; Volver a Técnicos</a>
+    </div>
+    <div class="detail-container">
+        <div class="detail-image-section">
+            <img src="@tech.Img" alt="@tech.Name" style="max-width:300px;border-radius:12px;" />
+        </div>
+        <div class="detail-info">
+            <h1>@tech.Name</h1>
+            <span class="tech-status-badge @(tech.Status ? "available" : "unavailable")">
+                @(tech.Status ? "Disponible" : "No Disponible")
+            </span>
+            <div class="detail-rating">
+                @for (int i = 0; i < 5; i++)
+                {
+                    <span class="star large @(i < tech.Stars ? "filled" : "")">&#9733;</span>
+                }
+                <span class="star-value">@tech.Stars.ToString("0.0")</span>
+            </div>
+            <div class="detail-actions">
+                <a href="/technicians/@tech.Id/edit" class="btn-primary">Editar</a>
+                <button class="btn-danger" @onclick="HandleDelete">Eliminar</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Inject] private ITechnicianService TechnicianService { get; set; } = default!;
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+    [Parameter] public int Id { get; set; }
+
+    private TechnicianDto? tech;
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            tech = await TechnicianService.GetByIdAsync(Id);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task HandleDelete()
+    {
+        try
+        {
+            await TechnicianService.DeleteAsync(Id);
+            Navigation.NavigateTo("/technicians");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error al eliminar: {ex.Message}";
+        }
+    }
+}

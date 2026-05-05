@@ -185,8 +185,14 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.Entity<User>().Property(u => u.Id).IsRequired().ValueGeneratedOnAdd();
         builder.Entity<User>().Property(u => u.Username).IsRequired();
         builder.Entity<User>().Property(u => u.PasswordHash).IsRequired();
-        builder.UseSnakeCaseNamingConvention();
-        
+        builder.Entity<User>().HasMany(u => u.UserRoles)
+            .WithOne(ur => ur.User)
+            .HasForeignKey(ur => ur.UserId);
+
+        builder.Entity<UserRole>().HasKey(ur => ur.Id);
+        builder.Entity<UserRole>().Property(ur => ur.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<UserRole>().Property(ur => ur.UserId).IsRequired();
+        builder.Entity<UserRole>().Property(ur => ur.Role).IsRequired().HasMaxLength(20);
         builder.UseSnakeCaseNamingConvention();
     }
     

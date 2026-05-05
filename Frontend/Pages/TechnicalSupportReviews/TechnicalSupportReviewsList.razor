@@ -1,0 +1,96 @@
+@page "/technical-support-reviews/{TechnicalSupportId:int}"
+
+<PageTitle>Reseñas de Soporte Técnico - PC Master</PageTitle>
+
+<div class="page-header">
+    <h1>Reseñas del Soporte #@TechnicalSupportId</h1>
+    <a href="/technical-support-reviews/create/@TechnicalSupportId" class="btn-primary">Agregar Reseña</a>
+</div>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
+@if (isLoading)
+{
+    <div class="loading">Cargando reseñas...</div>
+}
+else
+{
+    <div class="reviews-list">
+        @if (!reviews.Any())
+        {
+            <p class="empty-message">No hay reseñas para este soporte técnico.</p>
+        }
+        @foreach (var r in reviews)
+        {
+            <div class="review-card">
+                <div class="review-header">
+                    <strong>@r.UserName</strong>
+                    <div class="review-stars">
+                        @for (int i = 0; i < 5; i++)
+                        {
+                            <span class="star @(i < r.Rating ? "filled" : "")">&#9733;</span>
+                        }
+                    </div>
+                </div>
+                <p class="review-comment">@r.Comment</p>
+                <div class="review-actions">
+                    <a href="/technical-support-reviews/@r.Id/edit" class="btn-link-sm">Editar</a>
+                    <button class="btn-link-sm btn-danger" @onclick="() => DeleteReview(r.Id)">Eliminar</button>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Inject] private ITechnicalSupportReviewService ReviewService { get; set; } = default!;
+
+    [Parameter] public int TechnicalSupportId { get; set; }
+
+    private List<TechnicalSupportReviewDto> reviews = new();
+    private bool isLoading = true;
+    private string? errorMessage;
+    private string? successMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadReviews();
+    }
+
+    private async Task LoadReviews()
+    {
+        isLoading = true;
+        try
+        {
+            reviews = await ReviewService.GetByTechnicalSupportIdAsync(TechnicalSupportId);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task DeleteReview(int id)
+    {
+        try
+        {
+            await ReviewService.DeleteAsync(id);
+            successMessage = "Reseña eliminada.";
+            await LoadReviews();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+    }
+}
