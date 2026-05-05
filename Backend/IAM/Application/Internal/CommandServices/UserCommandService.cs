@@ -4,27 +4,10 @@ using Backend.IAM.Domain.Model.Commands;
 using Backend.IAM.Domain.Repositories;
 using Backend.IAM.Domain.Services;
 using Backend.Shared.Domain.Repositories;
+using Backend.Shared.Infrastructure.Exceptions;
 
 namespace Backend.IAM.Application.Internal.CommandServices;
 
-/// <summary>
-/// User command service 
-/// </summary>
-/// <remarks>
-/// This class is responsible for handling user commands
-/// </remarks>
-/// <param name="userRepository">
-/// The <see cref="IUserRepository"/> user repository
-/// </param>
-/// <param name="unitOfWork">
-/// The <see cref="IUnitOfWork"/> unit of work
-/// </param>
-/// <param name="tokenService">
-/// The <see cref="ITokenService"/> token service
-/// </param>
-/// <param name="hashingService">
-/// The <see cref="IHashingService"/> hashing service
-/// </param>
 public class UserCommandService(
     IUserRepository userRepository,
     IUnitOfWork unitOfWork,
@@ -32,11 +15,20 @@ public class UserCommandService(
     IHashingService hashingService
     ) : IUserCommandService
 {
-    // inheritDoc
     public async Task Handle(SignUpCommand command)
     {
+        if (string.IsNullOrWhiteSpace(command.Username))
+            throw new ValidationException("Username cannot be empty");
+
+        if (string.IsNullOrWhiteSpace(command.Password))
+            throw new ValidationException("Password cannot be empty");
+
+        if (command.Password.Length < 6)
+            throw new ValidationException("Password must be at least 6 characters");
+
         if (userRepository.ExistsByUsername(command.Username))
-            throw new Exception($"Username {command.Username} already exists");
+            throw new DuplicateEntityException($"Username '{command.Username}' already exists");
+
         var hashedPassword = hashingService.HashPassword(command.Password);
         var user = new User(command.Username, hashedPassword);
         try
@@ -50,13 +42,21 @@ public class UserCommandService(
         }
     }
 
-    // inheritDoc
     public async Task<(User user, string token)> Handle(SignInCommand command)
     {
+        if (string.IsNullOrWhiteSpace(command.Username))
+            throw new ValidationException("Username cannot be empty");
+
+        if (string.IsNullOrWhiteSpace(command.Password))
+            throw new ValidationException("Password cannot be empty");
+
         var user = await userRepository.FindByUsernameAsync(command.Username);
-        if (user is null) throw new Exception($"User {command.Username} not found");
+        if (user is null)
+            throw new NotFoundException($"User '{command.Username}' not found");
+
         if (!hashingService.VerifyPassword(command.Password, user.PasswordHash))
-            throw new Exception("Invalid password");
+            throw new ValidationException("Invalid password");
+
         var token = tokenService.GenerateToken(user);
         return (user, token);
     }
