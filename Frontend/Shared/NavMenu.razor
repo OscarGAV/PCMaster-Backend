@@ -1,4 +1,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
+@using PCMasterFrontend.Infrastructure.Constants
+@inject IAuthenticationService AuthService
+@inject NavigationManager Navigation
 
 <nav class="navbar">
     <div class="navbar-container">
@@ -8,18 +11,36 @@
         </a>
 
         <div class="navbar-links">
-            <a href="/components" class="nav-link">Componentes</a>
-            <a href="/technicians" class="nav-link">Técnicos</a>
-            <a href="/technical-supports" class="nav-link">Soporte Técnico</a>
-            <a href="/cart" class="nav-link">Carrito</a>
-            <a href="/wishlist" class="nav-link">Wishlist</a>
-            <a href="/users" class="nav-link">Usuarios</a>
+            <AuthorizeView>
+                <Authorized>
+                    <a href="/components" class="nav-link">Componentes</a>
+                    <a href="/technicians" class="nav-link">Técnicos</a>
+                    <a href="/technical-supports" class="nav-link">Soporte Técnico</a>
+                    @if (context.User.IsInRole(ERole.ROLE_CLIENTE))
+                    {
+                        <a href="/cart" class="nav-link">Carrito</a>
+                        <a href="/wishlist" class="nav-link">Wishlist</a>
+                    }
+                    @if (context.User.IsInRole(ERole.ROLE_ADMIN))
+                    {
+                        <a href="/users" class="nav-link">Usuarios</a>
+                    }
+                </Authorized>
+                <NotAuthorized>
+                    <a href="/components" class="nav-link">Componentes</a>
+                    <a href="/technicians" class="nav-link">Técnicos</a>
+                    <a href="/technical-supports" class="nav-link">Soporte Técnico</a>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
 
         <div class="navbar-actions">
             <AuthorizeView>
                 <Authorized>
                     <span class="nav-greeting">Hola, @context.User.Identity?.Name</span>
+                    <span class="nav-role-badge">
+                        @(context.User.IsInRole(ERole.ROLE_ADMIN) ? "Administrador" : context.User.IsInRole(ERole.ROLE_TECNICO) ? "Técnico" : "Cliente")
+                    </span>
                     <button class="btn-logout" @onclick="Logout">Salir</button>
                 </Authorized>
                 <NotAuthorized>
@@ -32,9 +53,6 @@
 </nav>
 
 @code {
-    [Inject] private IAuthenticationService AuthService { get; set; } = default!;
-    [Inject] private NavigationManager Navigation { get; set; } = default!;
-
     private async Task Logout()
     {
         await AuthService.LogoutAsync();

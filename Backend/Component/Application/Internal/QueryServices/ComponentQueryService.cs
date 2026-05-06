@@ -25,4 +25,9 @@ public class ComponentQueryService(IComponentRepository componentRepository) : I
     {
         return await componentRepository.ListAsync();
     }
+
+    public async Task<double?> GetAverageRatingByComponentIdAsync(int componentId)
+    {
+        return await componentRepository.GetAverageRatingByComponentIdAsync(componentId);
+    }
 }

@@ -1,10 +1,17 @@
 @page "/technical-support-reviews/{TechnicalSupportId:int}"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Components.Authorization
+@using PCMasterFrontend.Infrastructure.Constants
 
 <PageTitle>Reseñas de Soporte Técnico - PC Master</PageTitle>
 
 <div class="page-header">
     <h1>Reseñas del Soporte #@TechnicalSupportId</h1>
-    <a href="/technical-support-reviews/create/@TechnicalSupportId" class="btn-primary">Agregar Reseña</a>
+    <AuthorizeView Roles="@ERole.ROLE_CLIENTE">
+        <Authorized>
+            <a href="/technical-support-reviews/create/@TechnicalSupportId" class="btn-primary">Agregar Reseña</a>
+        </Authorized>
+    </AuthorizeView>
 </div>
 
 @if (!string.IsNullOrEmpty(successMessage))

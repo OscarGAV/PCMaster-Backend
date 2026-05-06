@@ -29,9 +29,9 @@ public class TechnicianService : ITechnicianService
         return await _apiClient.GetAsync<TechnicianDto>(Endpoints.TechnicianById(id));
     }
 
-    public async Task<TechnicianDto?> CreateAsync(CreateTechnicianRequest request)
+    public async Task<CreateTechnicianResponse?> CreateAsync(CreateTechnicianRequest request)
     {
-        return await _apiClient.PostAsync<TechnicianDto>(Endpoints.Technicians, request);
+        return await _apiClient.PostAsync<CreateTechnicianResponse>(Endpoints.Technicians, request);
     }
 
     public async Task<TechnicianDto?> UpdateAsync(int id, UpdateTechnicianRequest request)

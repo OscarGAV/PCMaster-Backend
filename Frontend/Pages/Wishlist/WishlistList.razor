@@ -1,11 +1,15 @@
 @page "/wishlist"
 @page "/wishlist/user/{UserId:int}"
+@attribute [Authorize(Roles = PCMasterFrontend.Infrastructure.Constants.ERole.ROLE_CLIENTE)]
+@using PCMasterFrontend.Infrastructure.Constants
 
 <PageTitle>Wishlist - PC Master</PageTitle>
 
 <div class="page-header">
     <h1>Wishlist</h1>
-    <a href="/wishlist/create" class="btn-primary">Agregar a Wishlist</a>
+    <AuthorizeView Roles="@ERole.ROLE_CLIENTE">
+        <a href="/wishlist/create" class="btn-primary">Agregar a Wishlist</a>
+    </AuthorizeView>
 </div>
 
 @if (!string.IsNullOrEmpty(successMessage))

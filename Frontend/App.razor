@@ -2,13 +2,26 @@
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
             <NotAuthorized>
-                <div class="not-authorized-container">
-                    <div class="not-authorized-card">
-                        <h1>Acceso Restringido</h1>
-                        <p>Debes iniciar sesión para acceder a esta sección.</p>
-                        <a href="/authentication/sign-in" class="btn-primary">Iniciar Sesión</a>
+                @if (context.User.Identity?.IsAuthenticated == true)
+                {
+                    <div class="not-authorized-container">
+                        <div class="not-authorized-card">
+                            <h1>Acceso Denegado</h1>
+                            <p>No tienes permiso para acceder a esta sección.</p>
+                            <a href="/" class="btn-primary">Volver al Inicio</a>
+                        </div>
                     </div>
-                </div>
+                }
+                else
+                {
+                    <div class="not-authorized-container">
+                        <div class="not-authorized-card">
+                            <h1>Acceso Restringido</h1>
+                            <p>Debes iniciar sesión para acceder a esta sección.</p>
+                            <a href="/authentication/sign-in" class="btn-primary">Iniciar Sesión</a>
+                        </div>
+                    </div>
+                }
             </NotAuthorized>
         </AuthorizeRouteView>
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />

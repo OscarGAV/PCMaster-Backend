@@ -1,5 +1,5 @@
 @page "/technicians/create"
-@attribute [Authorize]
+@attribute [Authorize(Roles = PCMasterFrontend.Infrastructure.Constants.ERole.ROLE_ADMIN)]
 
 <PageTitle>Nuevo Técnico - PC Master</PageTitle>
 
@@ -11,6 +11,17 @@
 @if (!string.IsNullOrEmpty(errorMessage))
 {
     <div class="alert alert-error">@errorMessage</div>
+}
+
+@if (createdCredentials is not null)
+{
+    <div class="alert alert-success">
+        <strong>Técnico creado exitosamente.</strong><br />
+        <strong>Credenciales de acceso:</strong><br />
+        Usuario: <code>@createdCredentials.Username</code><br />
+        Contraseña: <code>@createdCredentials.Password</code><br />
+        <small>Guarda estas credenciales, no se mostrarán de nuevo.</small>
+    </div>
 }
 
 <div class="form-container">
@@ -31,10 +42,6 @@
                 <InputCheckbox id="status" @bind-Value="model.Status" />
                 <span class="checkbox-label">Disponible</span>
             </div>
-            <div class="form-group">
-                <label for="stars">Estrellas (0-5)</label>
-                <InputNumber id="stars" @bind-Value="model.Stars" class="form-control" />
-            </div>
         </div>
         <button type="submit" class="btn-primary" disabled="@isLoading">
             @(isLoading ? "Creando..." : "Crear Técnico")
@@ -49,17 +56,24 @@
     private CreateTechnicianRequest model = new();
     private string? errorMessage;
     private bool isLoading;
+    private CreatedCredentials? createdCredentials;
 
     private async Task HandleCreate()
     {
         errorMessage = null;
         isLoading = true;
+        createdCredentials = null;
         try
         {
             var result = await TechnicianService.CreateAsync(model);
             if (result is not null)
             {
-                Navigation.NavigateTo("/technicians");
+                createdCredentials = new CreatedCredentials
+                {
+                    Username = result.Username,
+                    Password = result.Password
+                };
+                model = new CreateTechnicianRequest();
             }
         }
         catch (Exception ex)
@@ -70,5 +84,11 @@
         {
             isLoading = false;
         }
+    }
+
+    private class CreatedCredentials
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
     }
 }

@@ -1,12 +1,15 @@
 @page "/technicians"
 @attribute [Authorize]
+@using PCMasterFrontend.Infrastructure.Constants
 
 <PageTitle>Técnicos - PC Master</PageTitle>
 
 <div class="page-header">
     <h1>Técnicos</h1>
     <p>Nuestro equipo de técnicos especializados.</p>
-    <a href="/technicians/create" class="btn-primary">Nuevo Técnico</a>
+    <AuthorizeView Roles="@ERole.ROLE_ADMIN">
+        <a href="/technicians/create" class="btn-primary">Nuevo Técnico</a>
+    </AuthorizeView>
 </div>
 
 @if (!string.IsNullOrEmpty(successMessage))

@@ -1,4 +1,7 @@
 @page "/technicians/{Id:int}"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Components.Authorization
+@using PCMasterFrontend.Infrastructure.Constants
 
 <PageTitle>Detalle Técnico - PC Master</PageTitle>
 
@@ -25,15 +28,26 @@ else if (tech is not null)
                 @(tech.Status ? "Disponible" : "No Disponible")
             </span>
             <div class="detail-rating">
-                @for (int i = 0; i < 5; i++)
+                @if (tech.AverageRating.HasValue && tech.AverageRating.Value > 0)
                 {
-                    <span class="star large @(i < tech.Stars ? "filled" : "")">&#9733;</span>
+                    @for (int i = 0; i < 5; i++)
+                    {
+                        <span class="star large @(i < tech.AverageRating.Value ? "filled" : "")">&#9733;</span>
+                    }
+                    <span class="star-value">@tech.AverageRating.Value.ToString("0.0")</span>
                 }
-                <span class="star-value">@tech.Stars.ToString("0.0")</span>
+                else
+                {
+                    <span class="no-rating">El técnico no ha recibido calificaciones de ningún usuario</span>
+                }
             </div>
             <div class="detail-actions">
-                <a href="/technicians/@tech.Id/edit" class="btn-primary">Editar</a>
-                <button class="btn-danger" @onclick="HandleDelete">Eliminar</button>
+                <AuthorizeView Roles="@ERole.ROLE_ADMIN">
+                    <Authorized>
+                        <a href="/technicians/@tech.Id/edit" class="btn-primary">Editar</a>
+                        <button class="btn-danger" @onclick="HandleDelete">Eliminar</button>
+                    </Authorized>
+                </AuthorizeView>
             </div>
         </div>
     </div>

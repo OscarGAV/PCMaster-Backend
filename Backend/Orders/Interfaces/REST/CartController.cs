@@ -66,6 +66,7 @@ public class CartController(
     }
 
     [HttpDelete("{cartId}")]
+    [Authorize(AllowedRoles = [ERole.ROLE_CLIENTE])]
     [SwaggerOperation(
         Summary = "Delete a cart",
         Description = "Delete a cart by id",

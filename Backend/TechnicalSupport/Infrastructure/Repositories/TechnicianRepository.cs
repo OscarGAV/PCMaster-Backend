@@ -1,3 +1,4 @@
+using Backend.Interaction.Domain.Model.Aggregates;
 using Backend.Shared.Infrastructure.Persistence.EFC.Configuration;
 using Backend.Shared.Infrastructure.Persistence.EFC.Repositories;
 using Backend.TechnicalSupport.Domain.Model.Aggregates;
@@ -15,13 +16,29 @@ public class TechnicianRepository(AppDbContext ctx)
         return await Context.Set<Technician>().FirstOrDefaultAsync(f=>f.Name == name);
     }
 
-    public async Task<Technician?> FindByStarsAsync(double stars)
+    public async Task<double?> GetAverageRatingByTechnicianNameAsync(string technicianName)
     {
-        const double tolerance = 0.001; // Adjustable value based on required precision
-        return await Context.Set<Technician>()
-            .FirstOrDefaultAsync(f => Math.Abs(f.Stars - stars) < tolerance);
+        // Find all TechnicalSupport tickets assigned to this technician
+        var ticketIds = await Context.Set<TechnicalSupport.Domain.Model.Aggregates.TechnicalSupport>()
+            .Where(ts => ts.TechnicianId == technicianName)
+            .Select(ts => ts.Id)
+            .ToListAsync();
+
+        if (!ticketIds.Any())
+            return null;
+
+        // Find all reviews for these tickets
+        var ratings = await Context.Set<TechnicalSupportReview>()
+            .Where(review => ticketIds.Contains(review.TechnicalSupportId.TechSupportId))
+            .Select(review => review.Rating)
+            .ToListAsync();
+
+        if (!ratings.Any())
+            return null;
+
+        return ratings.Average();
     }
-    
+
     public async Task UpdateAsync(Technician technician)
     {
         //Update method of DbSet

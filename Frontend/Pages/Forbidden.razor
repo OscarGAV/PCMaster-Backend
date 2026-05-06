@@ -1,0 +1,26 @@
+@page "/forbidden"
+
+<PageTitle>Acceso Denegado - PC Master</PageTitle>
+
+<div class="error-page">
+    <div class="error-card">
+        <h1>403</h1>
+        <h2>Acceso Denegado</h2>
+        @if (!string.IsNullOrEmpty(Message))
+        {
+            <p class="error-message">@Message</p>
+        }
+        else
+        {
+            <p>No tienes permiso para acceder a esta sección.</p>
+        }
+        <div class="error-actions">
+            <a href="/" class="btn-primary">Volver al Inicio</a>
+            <a href="/components" class="btn-secondary">Ver Componentes</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromQuery] public string? Message { get; set; }
+}

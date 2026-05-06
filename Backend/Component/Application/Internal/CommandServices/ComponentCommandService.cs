@@ -20,9 +20,6 @@ public class ComponentCommandService(IComponentRepository componentRepository,
         if (command.Stock < 0)
             throw new ValidationException("Component stock must be greater than or equal to 0");
 
-        if (command.ProviderId <= 0)
-            throw new ValidationException("Component provider ID must be a positive number");
-
         if (string.IsNullOrWhiteSpace(command.Country))
             throw new ValidationException("Component country cannot be empty");
 

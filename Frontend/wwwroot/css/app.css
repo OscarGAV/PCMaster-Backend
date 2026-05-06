@@ -674,6 +674,12 @@ a:hover {
     font-size: 0.85rem;
 }
 
+.no-rating {
+    font-style: italic;
+    color: var(--color-gray-500);
+    font-size: 0.85rem;
+}
+
 .tech-card-footer {
     display: flex;
     justify-content: center;

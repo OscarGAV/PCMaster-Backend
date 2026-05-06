@@ -5,12 +5,9 @@ namespace Backend.TechnicalSupport.Interfaces.REST.Transform
 {
     public static class TechnicianResourceFromEntityAssembler
     {
-        public static TechnicianResource ToResourceFromEntity(Technician entity)
+        public static TechnicianResource ToResourceFromEntity(Technician entity, double? averageRating = null)
         {
-            // Round the Stars property to the desired number of decimal places (e.g., 1)
-            double roundedStars = Math.Round(entity.Stars, 1);
-            
-            return new TechnicianResource(entity.Id, entity.Name, entity.Status, roundedStars, entity.Img);
+            return new TechnicianResource(entity.Id, entity.Name, entity.Status, averageRating, entity.Img);
         }
     }
 }

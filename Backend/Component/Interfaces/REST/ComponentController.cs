@@ -24,7 +24,7 @@ public class ComponentController(
     private readonly IComponentQueryService _componentQueryService = componentQueryService;
 
     [HttpPost]
-    [Authorize(AllowedRoles = [ERole.ROLE_CLIENTE])]
+    [Authorize(AllowedRoles = [ERole.ROLE_TECNICO])]
     [SwaggerOperation(
         Summary = "Create a new component",
         Description = "Create a new component",
@@ -57,7 +57,8 @@ public class ComponentController(
         {
             return NotFound();
         }
-        var resource = ComponentResourceFromEntityAssembler.ToResource(component);
+        var avgRating = await _componentQueryService.GetAverageRatingByComponentIdAsync(componentId);
+        var resource = ComponentResourceFromEntityAssembler.ToResource(component, avgRating);
         return Ok(resource);
     }
 
@@ -70,7 +71,12 @@ public class ComponentController(
     public async Task<IActionResult> GetAllComponents()
     {
         var components = await _componentQueryService.Handle(new GetAllComponentsQuery());
-        var resources = components.Select(ComponentResourceFromEntityAssembler.ToResource).ToList();
+        var resources = new List<ComponentResource>();
+        foreach (var comp in components)
+        {
+            var avgRating = await _componentQueryService.GetAverageRatingByComponentIdAsync(comp.Id);
+            resources.Add(ComponentResourceFromEntityAssembler.ToResource(comp, avgRating));
+        }
         return Ok(resources);
     }
 }

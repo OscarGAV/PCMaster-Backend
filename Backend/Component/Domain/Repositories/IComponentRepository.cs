@@ -9,4 +9,5 @@ public interface IComponentRepository : IBaseRepository<Model.Aggregates.Compone
     Task<Model.Aggregates.Component> GetComponentsByProviderAsync(string providerId);
     Task AddAsync();
     Task<Task<Model.Aggregates.Component>> GetAllAsync();
+    Task<double?> GetAverageRatingByComponentIdAsync(int componentId);
 }

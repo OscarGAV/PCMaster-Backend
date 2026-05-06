@@ -20,11 +20,6 @@ public class Technician
     public bool Status { get; set; }
     
     /// <summary>
-    /// Stars Quantity (maximum could be five stars)
-    /// </summary>
-    public double Stars { get; set; }
-    
-    /// <summary>
     /// Photo Image of the technician
     /// </summary>
     public string Img { get; set; }
@@ -33,7 +28,6 @@ public class Technician
     {
         Name = string.Empty;
         Status = false;  
-        Stars = 0.0;
         Img = string.Empty;
     }
 
@@ -41,7 +35,6 @@ public class Technician
     {
         Name = command.Name;
         Status = command.Status;
-        this.setRating(command.Stars);
         Img = command.Img;
     }
     
@@ -49,15 +42,6 @@ public class Technician
     {
         this.Name = command.Name;
         this.Status = command.Status;
-        this.setRating(command.Stars);
         Img = command.Img;
-    }
-    
-    // Validation methods
-    public void setRating(double stars) {
-        if (stars < 0.0 || stars > 5.0) {
-            throw new ArgumentOutOfRangeException(nameof(stars), "Stars must be between 0 and 5.");
-        }
-        this.Stars = stars;
     }
 }

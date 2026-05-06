@@ -9,9 +9,7 @@ public class Component
     public string Description { get; private set; }
     public float Price { get; private set; }
     public int Stock { get; private set; }
-    public int ProviderId { get; init; }
     public string Image {get; private set;}
-    public int Ratings { get; init; }
     public string Model { get; private set; }
     public string Color { get; private set; }
     public string Dimensions { get; private set; }
@@ -23,7 +21,8 @@ public class Component
     public string CategorySubType { get; private set; }
     public string CategoryBrand { get; private set; }
     public string Country { get; init; }
-    public Component(string name, string description, float price, int stock, string image, int providerId, int ratings,
+
+    public Component(string name, string description, float price, int stock, string image,
         string model, string color, string dimensions, 
         string material, string weight, string categoryType, string categorySubType, string categoryBrand, string country)
     {
@@ -41,8 +40,6 @@ public class Component
         Price = price;
         Stock = stock;
         Image = image;
-        ProviderId = providerId;
-        Ratings = ratings;
         Model = model;
         Color = color;
         Dimensions = dimensions;
@@ -60,9 +57,7 @@ public class Component
         Description = command.Description;
         Price = command.Price;
         Stock = command.Stock;
-        ProviderId = command.ProviderId;
         Image = command.Image;
-        Ratings = command.Ratings;
         Model = command.Model;
         Color = command.Color;
         Dimensions = command.Dimensions;

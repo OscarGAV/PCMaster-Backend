@@ -13,8 +13,8 @@ public static class Endpoints
     public const string Users = "users";
     public static string UserById(int id) => $"users/{id}";
 
-    public const string Components = "components";
-    public static string ComponentById(int id) => $"components/{id}";
+    public const string Components = "component";
+    public static string ComponentById(int id) => $"component/{id}";
 
     public const string Technicians = "technicians";
     public const string TechniciansTopRanked = "technicians/top-ranked";

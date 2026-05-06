@@ -6,11 +6,10 @@ namespace Backend.TechnicalSupport.Domain.Model.Command;
 /// <param name="Id"></param>
 /// <param name="Name"></param>
 /// <param name="Status"></param>
-/// <param name="Stars"></param>
+/// <param name="Img"></param>
 public record UpdateTechnicianCommand(
     int Id,
     string Name,
     bool Status,
-    double Stars,
     string Img
     );

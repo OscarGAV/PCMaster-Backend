@@ -34,7 +34,6 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.Entity<Technician>().Property(f => f.Id).IsRequired().ValueGeneratedOnAdd();
         builder.Entity<Technician>().Property(f => f.Name).IsRequired();
         builder.Entity<Technician>().Property(f => f.Status).IsRequired();
-        builder.Entity<Technician>().Property(f => f.Stars).IsRequired();
         builder.Entity<Technician>().Property(x => x.Img).IsRequired().HasMaxLength(200);
         
         //Bounded Context Interaction
@@ -139,10 +138,6 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         .Property(x => x.Stock).IsRequired();
     builder.Entity<Component.Domain.Model.Aggregates.Component>()
         .Property(x => x.Image).IsRequired().HasMaxLength(200);
-    builder.Entity<Component.Domain.Model.Aggregates.Component>()
-        .Property(x => x.ProviderId).IsRequired();
-    builder.Entity<Component.Domain.Model.Aggregates.Component>()
-        .Property(x => x.Ratings);
     // Configuración de propiedades de atributos específicos
     builder.Entity<Component.Domain.Model.Aggregates.Component>().Property(c => c.Model)
         .HasMaxLength(100);

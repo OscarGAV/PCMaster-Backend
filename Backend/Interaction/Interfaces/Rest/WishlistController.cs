@@ -1,3 +1,4 @@
+using Backend.IAM.Domain.Model.ValueObjects;
 using Backend.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 using Backend.Interaction.Domain.Model.Commands;
 using Backend.Interaction.Domain.Model.Queries;
@@ -32,6 +33,7 @@ public class WishlistController(IWishlistCommandService wishlistCommandService,
     }
     
     [HttpPost()]
+    [Authorize(AllowedRoles = [ERole.ROLE_CLIENTE])]
     [SwaggerOperation(
         Summary = "Create a new wishlist",
         Description = "Create a new wishlist",
@@ -51,6 +53,7 @@ public class WishlistController(IWishlistCommandService wishlistCommandService,
     }
     
     [HttpPut("{id}")]
+    [Authorize(AllowedRoles = [ERole.ROLE_CLIENTE])]
     public async Task<IActionResult> UpdateWishlist(int id, [FromBody] UpdateWishlistResource resource)
     {
         var command = UpdateWishlistCommandFromResourceAssembler.ToCommandFromResource(id, resource);
@@ -60,6 +63,7 @@ public class WishlistController(IWishlistCommandService wishlistCommandService,
     }
     
     [HttpDelete("{id}")]
+    [Authorize(AllowedRoles = [ERole.ROLE_CLIENTE])]
     public async Task<IActionResult> DeleteWishlist(int id)
     {
         var command = new DeleteWishlistCommand(id);

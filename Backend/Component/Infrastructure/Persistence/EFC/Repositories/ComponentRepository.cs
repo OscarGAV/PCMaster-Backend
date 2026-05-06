@@ -1,5 +1,6 @@
 using Backend.Component.Domain.Model.Queries;
 using Backend.Component.Domain.Repositories;
+using Backend.Interaction.Domain.Model.Aggregates;
 using Backend.Shared.Infrastructure.Persistence.EFC.Configuration;
 using Backend.Shared.Infrastructure.Persistence.EFC.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -36,5 +37,18 @@ public class ComponentRepository(AppDbContext context) : BaseRepository<Domain.M
     {
         /*return await ComponentRepository.ListAsync();*/
         throw new NotImplementedException();
+    }
+
+    public async Task<double?> GetAverageRatingByComponentIdAsync(int componentId)
+    {
+        var ratings = await Context.Set<ComponentReview>()
+            .Where(r => r.ComponentId.CompId == componentId)
+            .Select(r => r.Rating)
+            .ToListAsync();
+
+        if (!ratings.Any())
+            return null;
+
+        return ratings.Average();
     }
 }

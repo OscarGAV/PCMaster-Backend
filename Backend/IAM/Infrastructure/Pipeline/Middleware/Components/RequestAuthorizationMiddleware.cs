@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Backend.IAM.Application.Internal.OutboundServices;
 using Backend.IAM.Domain.Model.Queries;
 using Backend.IAM.Domain.Services;
@@ -33,14 +34,30 @@ public class RequestAuthorizationMiddleware(RequestDelegate next)
             return;
         }
         var userId = await tokenService.ValidateToken(token);
-        
-        if (userId is null) throw new Exception("Invalid token");
-        
+
+        if (userId is null)
+        {
+            context.Response.StatusCode = 401;
+            await context.Response.WriteAsync("Token is invalid or expired");
+            return;
+        }
+
         var getUserByIdQuery = new GetUserByIdQuery(userId.Value);
 
         var user = await userQueryService.Handle(getUserByIdQuery);
         Console.WriteLine("Successfully authorized. Updating context...");
         context.Items["User"] = user;
+
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.Username)
+        };
+        claims.AddRange(user.UserRoles.Select(r => new Claim(ClaimTypes.Role, r.Role)));
+
+        var identity = new ClaimsIdentity(claims, "jwt");
+        context.User = new ClaimsPrincipal(identity);
+
         Console.WriteLine("Continuing to next middleware in pipeline");
         await next(context);
     }

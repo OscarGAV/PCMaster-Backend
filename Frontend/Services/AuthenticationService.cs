@@ -22,7 +22,7 @@ public class AuthenticationService : IAuthenticationService
         var result = await _apiClient.PostAsync<AuthenticatedUserDto>(Endpoints.SignIn, request);
         if (result is not null)
         {
-            await _authStateProvider.LoginAsync(result.Token, result.Username);
+            await _authStateProvider.LoginAsync(result.Token, result.Username, result.Roles);
         }
         return result;
     }

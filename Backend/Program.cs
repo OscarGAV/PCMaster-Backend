@@ -64,7 +64,11 @@ var connectionString = $"Server={dbServer};Database={dbName};User={dbUser};Passw
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 // Configure Kebab Case Route Naming Convention
-builder.Services.AddControllers(options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
+builder.Services.AddControllers(options => options.Conventions.Add(new KebabCaseRouteNamingConvention()))
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 

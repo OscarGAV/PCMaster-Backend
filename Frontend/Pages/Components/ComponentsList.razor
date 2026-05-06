@@ -1,21 +1,29 @@
 @page "/components"
 @attribute [Authorize]
+@using PCMasterFrontend.Infrastructure.Constants
+@using PCMasterFrontend.Infrastructure.Exceptions
+@using Microsoft.AspNetCore.Components.Authorization
 
 <PageTitle>Componentes - PC Master</PageTitle>
 
 <div class="page-header">
     <h1>Componentes</h1>
     <p>Catálogo completo de componentes de PC.</p>
-    <a href="/components/create" class="btn-primary">Nuevo Componente</a>
+    <AuthorizeView Roles="@ERole.ROLE_TECNICO">
+        <Authorized>
+            <a href="/components/create" class="btn-primary">Nuevo Componente</a>
+        </Authorized>
+    </AuthorizeView>
 </div>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
 
 @if (isLoading)
 {
     <div class="loading">Cargando componentes...</div>
-}
-else if (!string.IsNullOrEmpty(errorMessage))
-{
-    <div class="alert alert-error">@errorMessage</div>
 }
 else
 {
@@ -47,9 +55,16 @@ else
                         </span>
                     </div>
                     <div class="component-rating">
-                        @for (int i = 0; i < 5; i++)
+                        @if (comp.AverageRating.HasValue && comp.AverageRating.Value > 0)
                         {
-                            <span class="star @(i < comp.Ratings ? "filled" : "")">&#9733;</span>
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                <span class="star @(i < comp.AverageRating.Value ? "filled" : "")">&#9733;</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="no-rating">Sin calificaciones</span>
                         }
                     </div>
                     <div class="component-actions">
@@ -74,6 +89,10 @@ else
         try
         {
             components = await ComponentService.GetAllAsync();
+        }
+        catch (ForbiddenAccessException ex)
+        {
+            errorMessage = ex.Message;
         }
         catch (HttpRequestException)
         {

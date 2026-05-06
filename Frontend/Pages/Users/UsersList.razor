@@ -1,5 +1,6 @@
 @page "/users"
-@attribute [Authorize]
+@attribute [Authorize(Roles = PCMasterFrontend.Infrastructure.Constants.ERole.ROLE_ADMIN)]
+@using PCMasterFrontend.Infrastructure.Exceptions
 
 <PageTitle>Usuarios - PC Master</PageTitle>
 
@@ -60,6 +61,10 @@ else
         try
         {
             users = await UserService.GetAllAsync();
+        }
+        catch (ForbiddenAccessException ex)
+        {
+            errorMessage = ex.Message;
         }
         catch (HttpRequestException)
         {

@@ -1,5 +1,6 @@
 @page "/cart/create"
-@attribute [Authorize]
+@attribute [Authorize(Roles = PCMasterFrontend.Infrastructure.Constants.ERole.ROLE_CLIENTE)]
+@using PCMasterFrontend.Infrastructure.Exceptions
 
 <PageTitle>Agregar al Carrito - PC Master</PageTitle>
 
@@ -51,6 +52,10 @@
         {
             await CartService.CreateAsync(model);
             Navigation.NavigateTo("/cart");
+        }
+        catch (ForbiddenAccessException ex)
+        {
+            errorMessage = ex.Message;
         }
         catch (Exception ex)
         {

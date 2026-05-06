@@ -29,22 +29,43 @@ public class TechnicianQueryService(ITechnicianRepository technicianRepository) 
     }
     
     /// <summary>
-    /// Retrieves the top-ranked Technicians with the highest stars, up to the specified TopRanking.
+    /// Retrieves the top-ranked Technicians with the highest ratings, up to the specified TopRanking.
     /// </summary>
     /// <param name="query"></param>
-    /// <returns> A list of top-ranked Technicians with the greatest number of stars. </returns>
+    /// <returns> A list of top-ranked Technicians with the greatest average rating. </returns>
     public async Task<IEnumerable<Technician>> Handle(GetAllTechnicianByGreatestStarsNumberQuery query)
     {
-        // Fetch all technicians and filter, sort, and limit based on the query criteria
+        // Fetch all technicians and calculate their average ratings
         var technicians = await technicianRepository.ListAsync();
+        var techniciansWithRatings = new List<(Technician Technician, double Rating)>();
 
-        var topTechnicians = technicians
-            .Where(t => t.Stars >= query.Stars)
-            .OrderByDescending(t => t.Stars)
-            .ThenBy(t => t.Name)
+        foreach (var tech in technicians)
+        {
+            var avgRating = await technicianRepository.GetAverageRatingByTechnicianNameAsync(tech.Name);
+            if (avgRating.HasValue)
+            {
+                techniciansWithRatings.Add((tech, avgRating.Value));
+            }
+        }
+
+        // Sort by rating descending, then by name, and take the top N
+        var topTechnicians = techniciansWithRatings
+            .OrderByDescending(t => t.Rating)
+            .ThenBy(t => t.Technician.Name)
             .Take(query.TopRanking)
+            .Select(t => t.Technician)
             .ToList();
 
         return topTechnicians;
+    }
+    
+    /// <summary>
+    /// Gets the average rating for a technician by their name.
+    /// </summary>
+    /// <param name="technicianName"></param>
+    /// <returns></returns>
+    public async Task<double?> GetAverageRatingByTechnicianNameAsync(string technicianName)
+    {
+        return await technicianRepository.GetAverageRatingByTechnicianNameAsync(technicianName);
     }
 }

@@ -7,6 +7,6 @@ public static class CreateTechnicianCommandFromResourceAssembler
 {
     public static CreateTechnicianCommand ToCommandFromResource(CreateTechnicianResource resource)
     {
-        return new CreateTechnicianCommand(resource.Name, resource.Status, resource.Stars, resource.Img);
+        return new CreateTechnicianCommand(resource.Name, resource.Status, resource.Img);
     }
 }

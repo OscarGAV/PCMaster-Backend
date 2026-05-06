@@ -34,7 +34,7 @@ public class UsersController(IUserQueryService userQueryService) : ControllerBas
     }
 
     [HttpGet]
-    [Authorize(AllowedRoles = [ERole.ROLE_TECNICO])]
+    [Authorize(AllowedRoles = [ERole.ROLE_ADMIN])]
     [SwaggerOperation(
         Summary = "Get all users",
         Description = "Get all users",

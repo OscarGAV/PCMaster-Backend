@@ -1,4 +1,6 @@
 @page "/components/{ComponentId:int}"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Components.Authorization
 
 <PageTitle>Componente - PC Master</PageTitle>
 
@@ -37,16 +39,23 @@ else if (component is not null)
                     <div class="spec-item"><span>Material:</span> @component.Material</div>
                     <div class="spec-item"><span>Dimensiones:</span> @component.Dimensions</div>
                     <div class="spec-item"><span>Peso:</span> @component.Weight</div>
-                    <div class="spec-item"><span>Proveedor ID:</span> @component.ProviderId</div>
                     <div class="spec-item"><span>País:</span> @component.Country</div>
                 </div>
             </div>
 
             <div class="detail-rating">
                 <h3>Calificación</h3>
-                @for (int i = 0; i < 5; i++)
+                @if (component.AverageRating.HasValue && component.AverageRating.Value > 0)
                 {
-                    <span class="star large @(i < component.Ratings ? "filled" : "")">&#9733;</span>
+                    @for (int i = 0; i < 5; i++)
+                    {
+                        <span class="star large @(i < component.AverageRating.Value ? "filled" : "")">&#9733;</span>
+                    }
+                    <span class="star-value">@component.AverageRating.Value.ToString("0.0")</span>
+                }
+                else
+                {
+                    <span class="no-rating">El componente no ha recibido calificaciones de ningún usuario</span>
                 }
             </div>
 

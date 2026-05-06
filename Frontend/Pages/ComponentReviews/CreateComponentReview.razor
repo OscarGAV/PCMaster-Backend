@@ -1,4 +1,6 @@
 @page "/component-reviews/create/{ComponentId:int}"
+@attribute [Authorize(Roles = PCMasterFrontend.Infrastructure.Constants.ERole.ROLE_CLIENTE)]
+@using PCMasterFrontend.Infrastructure.Exceptions
 
 <PageTitle>Crear Reseña - PC Master</PageTitle>
 
@@ -55,6 +57,10 @@
         {
             await ReviewService.CreateAsync(model);
             Navigation.NavigateTo($"/component-reviews/{ComponentId}");
+        }
+        catch (ForbiddenAccessException ex)
+        {
+            errorMessage = ex.Message;
         }
         catch (Exception ex)
         {

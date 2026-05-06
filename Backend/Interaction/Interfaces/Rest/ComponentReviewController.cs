@@ -53,6 +53,7 @@ public class ComponentReviewController(IComponentReviewCommandService componentR
     }
     
     [HttpPut("{id}")]
+    [Authorize(AllowedRoles = [ERole.ROLE_CLIENTE])]
     public async Task<IActionResult> UpdateComponentReview(int id, [FromBody] UpdateComponentReviewResource resource)
     {
         var command = UpdateComponentReviewCommandFromResourceAssembler.ToCommandFromResource(id, resource);
@@ -62,6 +63,7 @@ public class ComponentReviewController(IComponentReviewCommandService componentR
     }
     
     [HttpDelete("{id}")]
+    [Authorize(AllowedRoles = [ERole.ROLE_CLIENTE])]
     public async Task<IActionResult> DeleteComponentReview(int id)
     {
         var command = new DeleteComponentReviewCommand(id);

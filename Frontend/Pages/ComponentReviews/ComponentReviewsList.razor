@@ -1,10 +1,17 @@
 @page "/component-reviews/{ComponentId:int}"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Components.Authorization
+@using PCMasterFrontend.Infrastructure.Constants
 
 <PageTitle>Reseñas de Componente - PC Master</PageTitle>
 
 <div class="page-header">
     <h1>Reseñas del Componente #@ComponentId</h1>
-    <a href="/component-reviews/create/@ComponentId" class="btn-primary">Agregar Reseña</a>
+    <AuthorizeView Roles="@ERole.ROLE_CLIENTE">
+        <Authorized>
+            <a href="/component-reviews/create/@ComponentId" class="btn-primary">Agregar Reseña</a>
+        </Authorized>
+    </AuthorizeView>
 </div>
 
 @if (!string.IsNullOrEmpty(successMessage))
