@@ -1,3 +1,4 @@
+using Backend.TechnicalSupport.Domain.Model.Aggregates;
 using Backend.TechnicalSupport.Domain.Model.Command;
 
 namespace Backend.TechnicalSupport.Domain.Services;
@@ -9,7 +10,7 @@ public interface ITechnicianCommandService
     /// </summary>
     /// <param name="command"></param>
     /// <returns></returns>
-    Task<Technician?> Handle(CreateTechnicianCommand command);
+    Task<CreateTechnicianResult?> Handle(CreateTechnicianCommand command);
     
     /// <summary>
     /// Handles the update of an existing Technician request.

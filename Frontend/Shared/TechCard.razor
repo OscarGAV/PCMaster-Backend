@@ -1,0 +1,44 @@
+@using PCMasterFrontend.Infrastructure.Constants
+
+<div class="tech-card">
+    <div class="tech-card-header">
+        <img src="@tech.Img" alt="@tech.Name" class="tech-image" />
+        <span class="tech-status @(tech.Status ? "available" : "unavailable")">
+            @(tech.Status ? "Disponible" : "No Disponible")
+        </span>
+    </div>
+    <div class="tech-card-body">
+        <h3>@tech.Name</h3>
+        <div class="tech-stars">
+            @if (tech.AverageRating.HasValue && tech.AverageRating.Value > 0)
+            {
+                @for (int i = 0; i < 5; i++)
+                {
+                    <span class="star @(i < tech.AverageRating.Value ? "filled" : "")">&#9733;</span>
+                }
+                <span class="star-value">@tech.AverageRating.Value.ToString("0.0")</span>
+            }
+            else
+            {
+                <span class="no-rating">El técnico no ha recibido calificaciones de ningún usuario</span>
+            }
+        </div>
+    </div>
+    <div class="tech-card-footer">
+        <a href="/technicians/@tech.Id" class="btn-link-sm">Ver Perfil</a>
+        <AuthorizeView Roles="@ERole.ROLE_ADMIN">
+            <a href="/technicians/@tech.Id/edit" class="btn-link-sm">Editar</a>
+            <button class="btn-link-sm btn-danger" @onclick="HandleDelete">Eliminar</button>
+        </AuthorizeView>
+    </div>
+</div>
+
+@code {
+    [Parameter] public TechnicianDto tech { get; set; } = default!;
+    [Parameter] public EventCallback<int> OnDelete { get; set; }
+
+    private async Task HandleDelete()
+    {
+        await OnDelete.InvokeAsync(tech.Id);
+    }
+}

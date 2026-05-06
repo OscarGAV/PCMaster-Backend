@@ -1,5 +1,8 @@
+using Backend.IAM.Domain.Model.Commands;
+using Backend.IAM.Domain.Services;
 using Backend.Shared.Domain.Repositories;
 using Backend.Shared.Infrastructure.Exceptions;
+using Backend.TechnicalSupport.Domain.Model.Aggregates;
 using Backend.TechnicalSupport.Domain.Model.Command;
 using Backend.TechnicalSupport.Domain.Repositories;
 using Backend.TechnicalSupport.Domain.Services;
@@ -7,9 +10,10 @@ using Backend.TechnicalSupport.Domain.Services;
 namespace Backend.TechnicalSupport.Application.Internal.CommandServices;
 
 public class TechnicianCommandService(ITechnicianRepository technicianRepository, 
-    IUnitOfWork unitOfWork) : ITechnicianCommandService
+    IUnitOfWork unitOfWork,
+    IUserCommandService userCommandService) : ITechnicianCommandService
 {
-    public async Task<Technician?> Handle(CreateTechnicianCommand command)
+    public async Task<CreateTechnicianResult?> Handle(CreateTechnicianCommand command)
     {
         if (string.IsNullOrWhiteSpace(command.Name))
             throw new ValidationException("Technician name cannot be empty");
@@ -39,7 +43,13 @@ public class TechnicianCommandService(ITechnicianRepository technicianRepository
             throw new Exception($"An error occurred while creating the technician: {e.Message}");
         }
 
-        return technician;
+        // Create user account for the technician
+        var username = command.Name.ToLower().Replace(" ", ".");
+        var password = GenerateRandomPassword();
+        var signUpCommand = new SignUpCommand(username, password, IAM.Domain.Model.ValueObjects.ERole.ROLE_TECNICO);
+        await userCommandService.Handle(signUpCommand);
+
+        return new CreateTechnicianResult(technician, username, password);
     }
     
     public async Task<Technician> Handle(UpdateTechnicianCommand command)
@@ -90,5 +100,13 @@ public class TechnicianCommandService(ITechnicianRepository technicianRepository
 
         await technicianRepository.DeleteAsync(technician);
         return true;
+    }
+
+    private static string GenerateRandomPassword()
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+        var random = new Random();
+        return new string(Enumerable.Repeat(chars, 12)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
     }
 }

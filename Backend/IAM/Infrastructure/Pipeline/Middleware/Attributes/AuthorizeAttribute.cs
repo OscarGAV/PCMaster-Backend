@@ -1,38 +1,30 @@
 using Backend.IAM.Domain.Model.Aggregates;
+using Backend.IAM.Domain.Model.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Backend.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 
-/// <summary>
-/// Authorize attribute 
-/// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class AuthorizeAttribute : Attribute, IAuthorizationFilter
-
 {
-    /// <summary>
-    /// On authorization 
-    /// </summary>
-    /// <remarks>
-    /// This method is called when the authorization filter is executed
-    /// </remarks>
-    /// <param name="context">
-    /// <see cref="AuthorizationFilterContext"/> Authorization filter context
-    /// </param>
+    public ERole[]? AllowedRoles { get; set; }
+
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        // Verify if the endpoint has AllowAnonymous attribute
-        var allowAnonymous = context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any();
-        // If the endpoint has AllowAnonymous attribute, skip authorization
-        if (allowAnonymous)
+        if (context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any())
+            return;
+
+        var user = (User?)context.HttpContext.Items["User"];
+        if (user is null)
         {
-            Console.WriteLine("Skipping authorization");
+            context.Result = new UnauthorizedResult();
             return;
         }
-        // Verify if the user is authenticated
-        var user = (User?)context.HttpContext.Items["User"];
-        // If the user is not authenticated, return 401 Unauthorized
-        if (user is null) context.Result = new UnauthorizedResult();
+
+        if (AllowedRoles is not { Length: > 0 }) return;
+
+        if (!AllowedRoles.Any(user.HasRole))
+            context.Result = new ForbidResult();
     }
 }

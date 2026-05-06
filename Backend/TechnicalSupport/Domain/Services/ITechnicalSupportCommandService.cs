@@ -13,14 +13,14 @@ public interface ITechnicalSupportCommandService
     /// </remarks>
     /// <param name="command"> CreateTechnicalSupportCommand command </param>
     /// <returns> A Technical Support instance if successful, or null if the entry already exists. </returns>
-    Task<TechnicalSupport?> Handle(CreateTechnicalSupportCommand command);
+    Task<Model.Aggregates.TechnicalSupport?> Handle(CreateTechnicalSupportCommand command);
     
     /// <summary>
     /// Handles the update of an existing Technical Support request.
     /// </summary>
     /// <param name="command"></param>
     /// <returns> The updated instance. </returns>
-    Task<TechnicalSupport> Handle(UpdateTechnicalSupportCommand command);
+    Task<Model.Aggregates.TechnicalSupport> Handle(UpdateTechnicalSupportCommand command);
     
     /// <summary>
     /// Handles the deletion of a Technical Support request.

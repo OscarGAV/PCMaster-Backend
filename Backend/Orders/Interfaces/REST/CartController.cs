@@ -1,6 +1,6 @@
 using System.Net.Mime;
+using Backend.IAM.Domain.Model.ValueObjects;
 using Backend.IAM.Infrastructure.Pipeline.Middleware.Attributes;
-using Backend.Orders.Domain.Model.Aggregates;
 using Backend.Orders.Domain.Model.Commands;
 using Backend.Orders.Domain.Model.Queries;
 using Backend.Orders.Domain.Services;
@@ -20,12 +20,8 @@ public class CartController(
     ICartCommandService cartCommandService,
     ICartQueryService cartQueryService) : ControllerBase
 {
-    /// <summary>
-    /// Create a new cart
-    /// </summary>
-    /// <param name="resource"></param>
-    /// <returns></returns>
     [HttpPost]
+    [Authorize(AllowedRoles = [ERole.ROLE_CLIENTE])]
     [SwaggerOperation(
         Summary = "Create a cart",
         Description = "Create a cart source",
@@ -34,18 +30,13 @@ public class CartController(
     [SwaggerResponse(400, "Cart was not created")]
     public async Task<ActionResult> CreateCart([FromBody] CreateCartResource resource)
     {
-        var command = CreateCartCommandFromResourceAssembler.toCommandFromResource(resource);
+        var command = CreateCartCommandFromResourceAssembler.ToCommandFromResource(resource);
         var result = await cartCommandService.Handle(command);
         if (result is null) return BadRequest();
         
-        //return CreatedAtAction(nameof())
         return Ok(command);
     }
 
-    /// <summary>
-    /// Get all carts
-    /// </summary>
-    /// <returns></returns>
     [HttpGet]
     [SwaggerOperation(
         Summary = "Get carts",
@@ -60,10 +51,6 @@ public class CartController(
         return Ok(cartResources);
     }
     
-    /// <summary>
-    /// Get Cart by User id
-    /// </summary>
-    /// <returns></returns>
     [HttpGet("user/{userId}")]
     [SwaggerOperation(
         Summary = "Get carts by user",
@@ -78,11 +65,8 @@ public class CartController(
         return Ok(cartResource);
     }
 
-    /// <summary>
-    /// Delete a cart
-    /// </summary>
-    /// <returns> Void </returns>
     [HttpDelete("{cartId}")]
+    [Authorize(AllowedRoles = [ERole.ROLE_CLIENTE])]
     [SwaggerOperation(
         Summary = "Delete a cart",
         Description = "Delete a cart by id",

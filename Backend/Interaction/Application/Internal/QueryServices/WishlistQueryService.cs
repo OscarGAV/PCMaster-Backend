@@ -5,17 +5,10 @@ using Backend.Interaction.Domain.Services;
 
 namespace Backend.Interaction.Application.Internal.QueryServices;
 
-public class WishlistQueryService : IWishlistQueryService
+public class WishlistQueryService(IWishlistRepository wishlistRepository) : IWishlistQueryService
 {
-    private readonly IWishlistRepository _wishlistRepository;
-
-    public WishlistQueryService(IWishlistRepository wishlistRepository)
-    {
-        _wishlistRepository = wishlistRepository;
-    }
-
     public async Task<IEnumerable<Wishlist>> Handle(GetWishlistByUserId query)
     {
-        return await _wishlistRepository.FindWishlistByUserIdAsync(query.UserId.UsrId);
+        return await wishlistRepository.FindWishlistByUserIdAsync(query.UserId.UsrId);
     }
 }

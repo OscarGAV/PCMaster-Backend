@@ -19,7 +19,7 @@ public class CartRepository(AppDbContext context) : BaseRepository<Cart>(context
         return await Context.Set<Cart>().FirstOrDefaultAsync(f => f.ComponentId == productId);
     }
 
-    public async Task DeleteByIdAsync(Cart cart)
+    public Task DeleteByIdAsync(Cart cart)
     {
 
         if (cart == null)
@@ -29,6 +29,7 @@ public class CartRepository(AppDbContext context) : BaseRepository<Cart>(context
 
         // Delete cart
         Context.Set<Cart>().Remove(cart);
+        return Task.CompletedTask;
     }
 
     public async Task<bool> ComponentIdExistsForUserAsync(int userId, int componentId)

@@ -1,5 +1,5 @@
 using Backend.Shared.Domain.Repositories;
-using Backend.TechnicalSupport;
+using Backend.TechnicalSupport.Domain.Model.Aggregates;
 
 namespace Backend.TechnicalSupport.Domain.Repositories;
 
@@ -7,7 +7,7 @@ public interface ITechnicianRepository : IBaseRepository<Technician>
 {
     Task<Technician?> FindByNameAsync(string name);
     
-    Task<Technician?> FindByStarsAsync(double stars);
+    Task<double?> GetAverageRatingByTechnicianNameAsync(string technicianName);
     
     Task UpdateAsync(Technician technician);
     

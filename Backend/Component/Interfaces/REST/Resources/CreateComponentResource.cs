@@ -17,15 +17,9 @@ namespace Backend.Component.Interfaces.REST.Resources
         [Range(0, int.MaxValue, ErrorMessage = "Stock must be greater than or equal to 0")]
         int Stock,
 
-        [Range(1, int.MaxValue, ErrorMessage = "ProviderId must be a positive number")]
-        int ProviderId,
-
         [Required(ErrorMessage = "Image URL is required")]
         [MaxLength(200, ErrorMessage = "Image URL must be at most 200 characters")]
         string Image,
-
-        [Range(0, 5, ErrorMessage = "Ratings must be between 0 and 5")]
-        int Ratings,
 
         [MaxLength(100, ErrorMessage = "Model must be at most 100 characters")]
         string Model,

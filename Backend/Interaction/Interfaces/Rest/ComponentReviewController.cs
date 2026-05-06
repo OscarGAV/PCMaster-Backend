@@ -1,3 +1,5 @@
+using Backend.IAM.Domain.Model.ValueObjects;
+using Backend.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 using Backend.Interaction.Domain.Model.Commands;
 using Backend.Interaction.Domain.Model.Queries;
 using Backend.Interaction.Domain.Model.ValueObjects;
@@ -9,6 +11,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Backend.Interaction.Interfaces.Rest;
 [ApiController]
+[Authorize]
 [Route("/api/v1/[controller]")]
 [SwaggerTag("Available Review Component Endpoints")]
 
@@ -29,12 +32,8 @@ public class ComponentReviewController(IComponentReviewCommandService componentR
         return Ok(componentReviewsResources);
     }
     
-    /// <summary>
-    /// Creates a new component review based on the provided resource.
-    /// </summary>
-    /// <param name="resource"></param>
-    /// <returns></returns>
     [HttpPost]
+    [Authorize(AllowedRoles = [ERole.ROLE_CLIENTE])]
     [SwaggerOperation(
         Summary = "Create a new component review",
         Description = "Create a new component review",
@@ -53,32 +52,18 @@ public class ComponentReviewController(IComponentReviewCommandService componentR
         return Ok(componentReviewResource);
     }
     
-    /// <summary>
-    /// Updates an existing component review record.
-    /// </summary>
-    /// <param name="id"></param>
-    /// <param name="resource"></param>
-    /// <returns> The updated component review resource, or a 404 Not Found if the record does not exist. </returns>
     [HttpPut("{id}")]
+    [Authorize(AllowedRoles = [ERole.ROLE_CLIENTE])]
     public async Task<IActionResult> UpdateComponentReview(int id, [FromBody] UpdateComponentReviewResource resource)
     {
         var command = UpdateComponentReviewCommandFromResourceAssembler.ToCommandFromResource(id, resource);
         var result = await componentReviewCommandService.Handle(command);
-    
-        if (result is null) return NotFound();
 
         return Ok(ComponentReviewResourceFromEntityAssembler.ToResourceFromEntity(result));
     }
     
-    /// <summary>
-    /// Deletes a component review record by its unique identifier.
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns>
-    /// A 204 No Content response if the deletion was successful,
-    /// or a 404 Not Found if the record does not exist.
-    /// </returns>
     [HttpDelete("{id}")]
+    [Authorize(AllowedRoles = [ERole.ROLE_CLIENTE])]
     public async Task<IActionResult> DeleteComponentReview(int id)
     {
         var command = new DeleteComponentReviewCommand(id);

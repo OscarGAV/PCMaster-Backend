@@ -3,15 +3,15 @@ using Backend.Component.Domain.Model.Queries;
 using Backend.Component.Domain.Services;
 using Backend.Component.Interfaces.REST.Resources;
 using Backend.Component.Interfaces.REST.Transform;
+using Backend.IAM.Domain.Model.ValueObjects;
 using Backend.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Backend.Component.Interfaces.REST;
 
 [ApiController]
-[Authorize] //Esto es el locker del IAM
+[Authorize]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)] 
 [Tags("Component")]
@@ -24,6 +24,7 @@ public class ComponentController(
     private readonly IComponentQueryService _componentQueryService = componentQueryService;
 
     [HttpPost]
+    [Authorize(AllowedRoles = [ERole.ROLE_TECNICO])]
     [SwaggerOperation(
         Summary = "Create a new component",
         Description = "Create a new component",
@@ -33,7 +34,7 @@ public class ComponentController(
     public async Task<IActionResult> CreateComponent([FromBody] CreateComponentResource resource)
     {
         var createComponentCommand = CreateComponentCommandFromResourceAssembler.ToCommand(resource);
-        var component = await componentCommandService.Handle(createComponentCommand);
+        var component = await _componentCommandService.Handle(createComponentCommand);
         if (component is null)
         {
             return BadRequest("No se pudo crear el componente. Verifique los datos proporcionados.");
@@ -56,7 +57,8 @@ public class ComponentController(
         {
             return NotFound();
         }
-        var resource = ComponentResourceFromEntityAssembler.ToResource(component);
+        var avgRating = await _componentQueryService.GetAverageRatingByComponentIdAsync(componentId);
+        var resource = ComponentResourceFromEntityAssembler.ToResource(component, avgRating);
         return Ok(resource);
     }
 
@@ -69,7 +71,12 @@ public class ComponentController(
     public async Task<IActionResult> GetAllComponents()
     {
         var components = await _componentQueryService.Handle(new GetAllComponentsQuery());
-        var resources = components.Select(ComponentResourceFromEntityAssembler.ToResource).ToList();  // Asegúrate de llamar a ToList() para materializar el enumerable
+        var resources = new List<ComponentResource>();
+        foreach (var comp in components)
+        {
+            var avgRating = await _componentQueryService.GetAverageRatingByComponentIdAsync(comp.Id);
+            resources.Add(ComponentResourceFromEntityAssembler.ToResource(comp, avgRating));
+        }
         return Ok(resources);
     }
 }

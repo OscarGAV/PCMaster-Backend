@@ -1,3 +1,4 @@
+using Backend.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 using Backend.Interaction.Domain.Model.Commands;
 using Backend.Interaction.Domain.Model.Queries;
 using Backend.Interaction.Domain.Model.ValueObjects;
@@ -10,6 +11,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Backend.Interaction.Interfaces.Rest;
 
 [ApiController]
+[Authorize]
 [Route("/api/v1/[controller]")]
 [SwaggerTag("Available Review Technical Support Endpoints")]
 public class TechnicalSupportReviewController(ITechnicalSupportReviewCommandService technicalSupportReviewCommandService, 
@@ -29,11 +31,6 @@ public class TechnicalSupportReviewController(ITechnicalSupportReviewCommandServ
         return Ok(technicalSupportReviewsResources);
     }
     
-    /// <summary>
-    /// Creates a new technical support review based on the provided resource.
-    /// </summary>
-    /// <param name="resource"></param>
-    /// <returns></returns>
     [HttpPost]
     [SwaggerOperation(
         Summary = "Create a new technical support review",
@@ -53,31 +50,15 @@ public class TechnicalSupportReviewController(ITechnicalSupportReviewCommandServ
         return Ok(technicalSupportReviewResource);
     }
     
-    /// <summary>
-    /// Updates an existing technical support review record.
-    /// </summary>
-    /// <param name="id"></param>
-    /// <param name="resource"></param>
-    /// <returns> The updated technical support review resource, or a 404 Not Found if the record does not exist. </returns>
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTechnicalSupportReview(int id, [FromBody] UpdateTechnicalSupportReviewResource resource)
     {
         var command = UpdateTechnicalSupportReviewCommandFromResourceAssembler.ToCommandFromResource(id, resource);
         var result = await technicalSupportReviewCommandService.Handle(command);
-    
-        if (result is null) return NotFound();
 
         return Ok(TechnicalSupportReviewResourceFromEntityAssembler.ToResourceFromEntity(result));
     }
     
-    /// <summary>
-    /// Deletes a technical support review record by its unique identifier.
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns>
-    /// A 204 No Content response if the deletion was successful,
-    /// or a 404 Not Found if the record does not exist.
-    /// </returns>
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTechnicalSupportReview(int id)
     {

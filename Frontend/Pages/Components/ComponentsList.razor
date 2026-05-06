@@ -1,0 +1,110 @@
+@page "/components"
+@attribute [Authorize]
+@using PCMasterFrontend.Infrastructure.Constants
+@using PCMasterFrontend.Infrastructure.Exceptions
+@using Microsoft.AspNetCore.Components.Authorization
+
+<PageTitle>Componentes - PC Master</PageTitle>
+
+<div class="page-header">
+    <h1>Componentes</h1>
+    <p>Catálogo completo de componentes de PC.</p>
+    <AuthorizeView Roles="@ERole.ROLE_TECNICO">
+        <Authorized>
+            <a href="/components/create" class="btn-primary">Nuevo Componente</a>
+        </Authorized>
+    </AuthorizeView>
+</div>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
+
+@if (isLoading)
+{
+    <div class="loading">Cargando componentes...</div>
+}
+else
+{
+    <div class="components-grid">
+        @if (!components.Any())
+        {
+            <p class="empty-message">No hay componentes registrados.</p>
+        }
+        @foreach (var comp in components)
+        {
+            <div class="component-card">
+                <div class="component-card-header">
+                    <img src="@comp.Image" alt="@comp.Name" class="component-image" onerror="this.onerror=null;this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><rect fill=%22%23d1f2ff%22 width=%22200%22 height=%22200%22/><text fill=%22%23001014%22 x=%2250%22 y=%22110%22 font-size=%2216%22>Sin Imagen</text></svg>'" />
+                </div>
+                <div class="component-card-body">
+                    <span class="component-category">@comp.CategoryType</span>
+                    <h3>@comp.Name</h3>
+                    <p class="component-model">@comp.Model - @comp.CategoryBrand</p>
+                    <div class="component-specs">
+                        <span>@comp.Color</span>
+                        <span>@comp.Material</span>
+                        <span>@comp.Dimensions</span>
+                        <span>@comp.Weight</span>
+                    </div>
+                    <div class="component-footer">
+                        <span class="component-price">S/ @comp.Price.ToString("N2")</span>
+                        <span class="component-stock @(comp.Stock > 0 ? "in-stock" : "out-stock")">
+                            @(comp.Stock > 0 ? $"{comp.Stock} en stock" : "Agotado")
+                        </span>
+                    </div>
+                    <div class="component-rating">
+                        @if (comp.AverageRating.HasValue && comp.AverageRating.Value > 0)
+                        {
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                <span class="star @(i < comp.AverageRating.Value ? "filled" : "")">&#9733;</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="no-rating">Sin calificaciones</span>
+                        }
+                    </div>
+                    <div class="component-actions">
+                        <a href="/components/@comp.ComponentId" class="btn-link-sm">Ver Detalles</a>
+                        <a href="/component-reviews/@comp.ComponentId" class="btn-link-sm">Reseñas</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Inject] private IComponentService ComponentService { get; set; } = default!;
+
+    private List<ComponentDto> components = new();
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            components = await ComponentService.GetAllAsync();
+        }
+        catch (ForbiddenAccessException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        catch (HttpRequestException)
+        {
+            errorMessage = "Error de conexión con el servidor.";
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Backend.Interaction.Domain.Model.Commands;
 using Backend.Interaction.Domain.Model.ValueObjects;
 

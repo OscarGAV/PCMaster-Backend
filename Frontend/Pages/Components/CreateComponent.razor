@@ -1,0 +1,135 @@
+@page "/components/create"
+@attribute [Authorize(Roles = PCMasterFrontend.Infrastructure.Constants.ERole.ROLE_TECNICO)]
+@using PCMasterFrontend.Infrastructure.Exceptions
+
+<PageTitle>Nuevo Componente - PC Master</PageTitle>
+
+<div class="page-header">
+    <a href="/components" class="btn-link-sm">&larr; Volver a Componentes</a>
+    <h1>Crear Componente</h1>
+</div>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
+
+<div class="form-container">
+    <EditForm Model="model" OnValidSubmit="HandleCreate" FormName="create-component-form">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="name">Nombre *</label>
+                <InputText id="name" @bind-Value="model.Name" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="country">País *</label>
+                <InputText id="country" @bind-Value="model.Country" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="description">Descripción</label>
+            <InputTextArea id="description" @bind-Value="model.Description" class="form-control" rows="3" />
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="price">Precio</label>
+                <InputNumber id="price" @bind-Value="model.Price" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="stock">Stock</label>
+                <InputNumber id="stock" @bind-Value="model.Stock" class="form-control" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="image">URL de Imagen</label>
+                <InputText id="image" @bind-Value="model.Image" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="model">Modelo</label>
+                <InputText id="model" @bind-Value="model.Model" class="form-control" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="color">Color</label>
+                <InputText id="color" @bind-Value="model.Color" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="dimensions">Dimensiones</label>
+                <InputText id="dimensions" @bind-Value="model.Dimensions" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="material">Material</label>
+                <InputText id="material" @bind-Value="model.Material" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="weight">Peso</label>
+                <InputText id="weight" @bind-Value="model.Weight" class="form-control" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="categoryType">Categoría</label>
+                <InputText id="categoryType" @bind-Value="model.CategoryType" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="categorySubType">Sub-Categoría</label>
+                <InputText id="categorySubType" @bind-Value="model.CategorySubType" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="categoryBrand">Marca</label>
+                <InputText id="categoryBrand" @bind-Value="model.CategoryBrand" class="form-control" />
+            </div>
+        </div>
+        <button type="submit" class="btn-primary" disabled="@isLoading">
+            @(isLoading ? "Creando..." : "Crear Componente")
+        </button>
+    </EditForm>
+</div>
+
+@code {
+    [Inject] private IComponentService ComponentService { get; set; } = default!;
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+    private CreateComponentRequest model = new();
+    private string? errorMessage;
+    private string? successMessage;
+    private bool isLoading;
+
+    private async Task HandleCreate()
+    {
+        errorMessage = null;
+        successMessage = null;
+        isLoading = true;
+        try
+        {
+            var result = await ComponentService.CreateAsync(model);
+            if (result is not null)
+            {
+                successMessage = "Componente creado exitosamente.";
+                Navigation.NavigateTo("/components");
+            }
+        }
+        catch (ForbiddenAccessException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        catch (HttpRequestException)
+        {
+            errorMessage = "Error de conexión con el servidor.";
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

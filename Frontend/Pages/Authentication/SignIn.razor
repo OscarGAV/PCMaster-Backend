@@ -1,0 +1,73 @@
+@page "/authentication/sign-in"
+@using Microsoft.AspNetCore.Components.Authorization
+
+<PageTitle>Iniciar Sesión - PC Master</PageTitle>
+
+<div class="auth-page">
+    <div class="auth-card">
+        <h2>Iniciar Sesión</h2>
+        <p class="auth-subtitle">Accede a tu cuenta de PC Master</p>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-error">@errorMessage</div>
+        }
+
+        <EditForm Model="model" OnValidSubmit="HandleSignIn" FormName="signin-form">
+            <div class="form-group">
+                <label for="username">Usuario</label>
+                <InputText id="username" @bind-Value="model.UserName" class="form-control" placeholder="Tu nombre de usuario" />
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <InputText id="password" type="password" @bind-Value="model.Password" class="form-control" placeholder="Tu contraseña" />
+            </div>
+            <button type="submit" class="btn-primary btn-block" disabled="@isLoading">
+                @(isLoading ? "Iniciando sesión..." : "Iniciar Sesión")
+            </button>
+        </EditForm>
+
+        <p class="auth-switch">
+            ¿No tienes cuenta? <a href="/authentication/sign-up">Regístrate aquí</a>
+        </p>
+    </div>
+</div>
+
+@code {
+    [Inject] private IAuthenticationService AuthService { get; set; } = default!;
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+    private SignInRequest model = new();
+    private string? errorMessage;
+    private bool isLoading;
+
+    private async Task HandleSignIn()
+    {
+        errorMessage = null;
+        isLoading = true;
+        try
+        {
+            var result = await AuthService.SignInAsync(model);
+            if (result is not null)
+            {
+                Navigation.NavigateTo("/", forceLoad: true);
+            }
+            else
+            {
+                errorMessage = "Credenciales inválidas. Intenta de nuevo.";
+            }
+        }
+        catch (HttpRequestException)
+        {
+            errorMessage = "Error de conexión con el servidor. Verifica que el backend esté corriendo.";
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

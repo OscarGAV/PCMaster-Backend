@@ -9,9 +9,6 @@ public record CreateTechnicianResource(
 
     bool Status,
 
-    [Range(0.0, 5.0, ErrorMessage = "Stars must be between 0 and 5")]
-    double Stars,
-
     [Required(ErrorMessage = "Image URL is required")]
     [MaxLength(200, ErrorMessage = "Image URL must be at most 200 characters")]
     string Img

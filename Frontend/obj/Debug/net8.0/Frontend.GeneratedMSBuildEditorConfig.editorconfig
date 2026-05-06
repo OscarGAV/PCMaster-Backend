@@ -1,0 +1,155 @@
+is_global = true
+build_property.EnableAotAnalyzer = 
+build_property.EnableSingleFileAnalyzer = 
+build_property.EnableTrimAnalyzer = false
+build_property.IncludeAllContentForSelfExtract = 
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = browser
+build_property.RootNamespace = PCMasterFrontend
+build_property.RootNamespace = PCMasterFrontend
+build_property.ProjectDir = C:\Users\Oscar\OneDrive\Documentos\Oscar\Proyectos Locales\Backend-main\Frontend\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = false
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Oscar\OneDrive\Documentos\Oscar\Proyectos Locales\Backend-main\Frontend
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Authentication/SignIn.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aGVudGljYXRpb25cU2lnbkluLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Authentication/SignUp.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aGVudGljYXRpb25cU2lnblVwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Cart/CartList.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2FydFxDYXJ0TGlzdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Cart/CreateCart.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2FydFxDcmVhdGVDYXJ0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/ComponentReviews/ComponentReviewsList.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tcG9uZW50UmV2aWV3c1xDb21wb25lbnRSZXZpZXdzTGlzdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/ComponentReviews/CreateComponentReview.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tcG9uZW50UmV2aWV3c1xDcmVhdGVDb21wb25lbnRSZXZpZXcucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/ComponentReviews/EditComponentReview.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tcG9uZW50UmV2aWV3c1xFZGl0Q29tcG9uZW50UmV2aWV3LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Components/ComponentDetail.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tcG9uZW50c1xDb21wb25lbnREZXRhaWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Components/ComponentsList.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tcG9uZW50c1xDb21wb25lbnRzTGlzdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Components/CreateComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tcG9uZW50c1xDcmVhdGVDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Forbidden.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRm9yYmlkZGVuLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/TechnicalSupportReviews/CreateTechnicalSupportReview.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVjaG5pY2FsU3VwcG9ydFJldmlld3NcQ3JlYXRlVGVjaG5pY2FsU3VwcG9ydFJldmlldy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/TechnicalSupportReviews/EditTechnicalSupportReview.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVjaG5pY2FsU3VwcG9ydFJldmlld3NcRWRpdFRlY2huaWNhbFN1cHBvcnRSZXZpZXcucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/TechnicalSupportReviews/TechnicalSupportReviewsList.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVjaG5pY2FsU3VwcG9ydFJldmlld3NcVGVjaG5pY2FsU3VwcG9ydFJldmlld3NMaXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/TechnicalSupports/CreateTechnicalSupport.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVjaG5pY2FsU3VwcG9ydHNcQ3JlYXRlVGVjaG5pY2FsU3VwcG9ydC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/TechnicalSupports/EditTechnicalSupport.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVjaG5pY2FsU3VwcG9ydHNcRWRpdFRlY2huaWNhbFN1cHBvcnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/TechnicalSupports/TechnicalSupportDetail.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVjaG5pY2FsU3VwcG9ydHNcVGVjaG5pY2FsU3VwcG9ydERldGFpbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/TechnicalSupports/TechnicalSupportsList.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVjaG5pY2FsU3VwcG9ydHNcVGVjaG5pY2FsU3VwcG9ydHNMaXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Technicians/CreateTechnician.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVjaG5pY2lhbnNcQ3JlYXRlVGVjaG5pY2lhbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Technicians/EditTechnician.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVjaG5pY2lhbnNcRWRpdFRlY2huaWNpYW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Technicians/TechnicianDetail.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVjaG5pY2lhbnNcVGVjaG5pY2lhbkRldGFpbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Technicians/TechniciansList.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVjaG5pY2lhbnNcVGVjaG5pY2lhbnNMaXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Users/UsersList.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlcnNcVXNlcnNMaXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Wishlist/CreateWishlist.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcV2lzaGxpc3RcQ3JlYXRlV2lzaGxpc3QucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Wishlist/EditWishlist.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcV2lzaGxpc3RcRWRpdFdpc2hsaXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Pages/Wishlist/WishlistList.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcV2lzaGxpc3RcV2lzaGxpc3RMaXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Shared/Footer.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXEZvb3Rlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/Shared/TechCard.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFRlY2hDYXJkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Oscar/OneDrive/Documentos/Oscar/Proyectos Locales/Backend-main/Frontend/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 

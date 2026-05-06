@@ -3,7 +3,7 @@ using Backend.Interaction.Interfaces.Rest.Resources;
 
 namespace Backend.Interaction.Interfaces.Rest.Transform;
 
-public class UpdateWishlistCommandFromResourceAssembler
+public static class UpdateWishlistCommandFromResourceAssembler
 {
     public static UpdateWishlistCommand ToCommandFromResource(int id, UpdateWishlistResource resource)
     {

@@ -61,7 +61,6 @@ public class TechnicalSupportController(ITechnicalSupportCommandService commandS
     {
         var getTechnicalSupportBySupportTypeAndTechniciansId = new GetTechnicalSupportBySupportTypeAndTechnicianIdQuery(supportType, technicianId);
         var result = await queryService.Handle(getTechnicalSupportBySupportTypeAndTechniciansId);
-        if (result is null) return NotFound();
         var resources = TechnicalSupportResourceFromEntityAssembler.ToResourceFromEntity(result);
         return Ok(resources);
     }
@@ -89,7 +88,7 @@ public class TechnicalSupportController(ITechnicalSupportCommandService commandS
     /// <param name="supportType"></param>
     /// <param name="technicianId"></param>
     /// <returns> A collection of technical support resources. </returns>
-    [HttpGet("{supportType}")]
+    [HttpGet($"{{{nameof(supportType)}}}")]
     public async Task<ActionResult> GetTechnicalSupportFromQuery(bool supportType, [FromQuery] string technicianId = "")
     {
         return string.IsNullOrEmpty(technicianId) 
@@ -107,7 +106,6 @@ public class TechnicalSupportController(ITechnicalSupportCommandService commandS
     {
         var getTechnicalSupportById = new GetTechnicalSupportByIdQuery(id);
         var result = await queryService.Handle(getTechnicalSupportById);
-        if (result is null) return NotFound();
         var resources = TechnicalSupportResourceFromEntityAssembler.ToResourceFromEntity(result);
         return Ok(resources);
     }
@@ -123,8 +121,6 @@ public class TechnicalSupportController(ITechnicalSupportCommandService commandS
     {
         var command = UpdateTechnicalSupportCommandFromResourceAssembler.ToCommandFromResource(id, resource);
         var result = await commandService.Handle(command);
-    
-        if (result is null) return NotFound();
 
         return Ok(TechnicalSupportResourceFromEntityAssembler.ToResourceFromEntity(result));
     }

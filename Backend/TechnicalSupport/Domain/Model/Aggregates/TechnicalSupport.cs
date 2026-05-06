@@ -1,7 +1,6 @@
 using Backend.TechnicalSupport.Domain.Model.Command;
-using Google.Protobuf.WellKnownTypes;
 
-namespace Backend.TechnicalSupport;
+namespace Backend.TechnicalSupport.Domain.Model.Aggregates;
 
 public class TechnicalSupport
 {

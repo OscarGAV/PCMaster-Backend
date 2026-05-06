@@ -2,20 +2,9 @@ using System.Text.Json.Serialization;
 
 namespace Backend.Component.Interfaces.REST.Resources;
 
-public record AttributesResource
+[method: JsonConstructor]
+public record AttributesResource(Dictionary<string, string> AttributeList)
 {
-    public Dictionary<string, string> AttributeList { get; init; }
-
-    // Constructor sin parámetros para la deserialización
-    public AttributesResource() 
-    {
-        AttributeList = new Dictionary<string, string>();
-    }
-
-    // O bien, si tienes un constructor parametrizado
-    [JsonConstructor]
-    public AttributesResource(Dictionary<string, string> attributeList)
-    {
-        AttributeList = attributeList;
-    }
+    // Constructor with no parameters for deserialization
+    public AttributesResource() : this(new Dictionary<string, string>()) { }
 }

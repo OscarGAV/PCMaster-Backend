@@ -1,0 +1,102 @@
+@page "/technicians"
+@attribute [Authorize]
+@using PCMasterFrontend.Infrastructure.Constants
+
+<PageTitle>Técnicos - PC Master</PageTitle>
+
+<div class="page-header">
+    <h1>Técnicos</h1>
+    <p>Nuestro equipo de técnicos especializados.</p>
+    <AuthorizeView Roles="@ERole.ROLE_ADMIN">
+        <a href="/technicians/create" class="btn-primary">Nuevo Técnico</a>
+    </AuthorizeView>
+</div>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
+@if (isLoading)
+{
+    <div class="loading">Cargando técnicos...</div>
+}
+else
+{
+    @if (topRanked.Any())
+    {
+        <h2 class="section-title">Técnicos Destacados</h2>
+        <div class="technicians-grid">
+            @foreach (var tech in topRanked)
+            {
+                <TechCard tech="tech" OnDelete="DeleteTech" />
+            }
+        </div>
+    }
+
+    <h2 class="section-title">Todos los Técnicos</h2>
+    <div class="technicians-grid">
+        @if (!technicians.Any())
+        {
+            <p class="empty-message">No hay técnicos registrados.</p>
+        }
+        @foreach (var tech in technicians)
+        {
+            <TechCard tech="tech" OnDelete="DeleteTech" />
+        }
+    </div>
+}
+
+@code {
+    [Inject] private ITechnicianService TechnicianService { get; set; } = default!;
+
+    private List<TechnicianDto> technicians = new();
+    private List<TechnicianDto> topRanked = new();
+    private bool isLoading = true;
+    private string? errorMessage;
+    private string? successMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+            technicians = await TechnicianService.GetAllAsync();
+            topRanked = await TechnicianService.GetTopRankedAsync();
+        }
+        catch (HttpRequestException)
+        {
+            errorMessage = "Error de conexión con el servidor.";
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task DeleteTech(int id)
+    {
+        try
+        {
+            await TechnicianService.DeleteAsync(id);
+            successMessage = "Técnico eliminado exitosamente.";
+            isLoading = true;
+            await LoadData();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error al eliminar: {ex.Message}";
+        }
+    }
+}

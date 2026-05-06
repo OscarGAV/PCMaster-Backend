@@ -1,5 +1,4 @@
 using Backend.Interaction.Domain.Model.Aggregates;
-using Backend.Interaction.Domain.Model.ValueObjects;
 using Backend.Interaction.Domain.Repositories;
 using Backend.Shared.Infrastructure.Persistence.EFC.Configuration;
 using Backend.Shared.Infrastructure.Persistence.EFC.Repositories;

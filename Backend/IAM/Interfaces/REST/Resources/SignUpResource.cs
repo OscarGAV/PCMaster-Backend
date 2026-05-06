@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Backend.IAM.Domain.Model.ValueObjects;
 
 namespace Backend.IAM.Interfaces.REST.Resources;
 
@@ -10,5 +11,8 @@ public record SignUpResource(
 
     [Required(ErrorMessage = "Password is required")]
     [MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
-    string Password
+    string Password,
+
+    [Required(ErrorMessage = "Role is required")]
+    ERole Role
 );

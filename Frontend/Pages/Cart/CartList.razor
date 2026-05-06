@@ -1,0 +1,126 @@
+@page "/cart"
+@page "/cart/user/{UserId:int}"
+@attribute [Authorize]
+@using PCMasterFrontend.Infrastructure.Constants
+@using PCMasterFrontend.Infrastructure.Exceptions
+@using Microsoft.AspNetCore.Components.Authorization
+
+<PageTitle>Carrito - PC Master</PageTitle>
+
+<div class="page-header">
+    <h1>Carrito de Compras</h1>
+    <AuthorizeView Roles="@ERole.ROLE_CLIENTE">
+        <Authorized>
+            <a href="/cart/create" class="btn-primary">Agregar al Carrito</a>
+        </Authorized>
+    </AuthorizeView>
+</div>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
+@if (isLoading)
+{
+    <div class="loading">Cargando carrito...</div>
+}
+else
+{
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Componente ID</th>
+                    <th>Usuario ID</th>
+                    <th>Cantidad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!carts.Any())
+                {
+                    <tr><td colspan="5" class="empty-message">El carrito está vacío.</td></tr>
+                }
+                @foreach (var c in carts)
+                {
+                    <tr>
+                        <td>@c.Id</td>
+                        <td><a href="/components/@c.ComponentId">@c.ComponentId</a></td>
+                        <td>@c.UserId</td>
+                        <td>@c.Quantity</td>
+                        <td>
+                            <AuthorizeView Roles="@ERole.ROLE_CLIENTE">
+                                <Authorized>
+                                    <button class="btn-link-sm btn-danger" @onclick="() => DeleteCart(c.Id)">Eliminar</button>
+                                </Authorized>
+                            </AuthorizeView>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    [Inject] private ICartService CartService { get; set; } = default!;
+
+    [Parameter] public int? UserId { get; set; }
+
+    private List<CartDto> carts = new();
+    private bool isLoading = true;
+    private string? errorMessage;
+    private string? successMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCarts();
+    }
+
+    private async Task LoadCarts()
+    {
+        isLoading = true;
+        try
+        {
+            if (UserId.HasValue && UserId > 0)
+                carts = await CartService.GetByUserIdAsync(UserId.Value);
+            else
+                carts = await CartService.GetAllAsync();
+        }
+        catch (ForbiddenAccessException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task DeleteCart(int id)
+    {
+        try
+        {
+            await CartService.DeleteAsync(id);
+            successMessage = "Elemento eliminado del carrito.";
+            await LoadCarts();
+        }
+        catch (ForbiddenAccessException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+    }
+}

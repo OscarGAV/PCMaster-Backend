@@ -1,9 +1,6 @@
-using Backend.Component.Domain.Model.Aggregates;
 using Backend.Component.Domain.Model.Queries;
 using Backend.Component.Domain.Repositories;
 using Backend.Interaction.Domain.Model.Aggregates;
-using Backend.Interaction.Domain.Repositories;
-using Backend.Shared.Domain.Repositories;
 using Backend.Shared.Infrastructure.Persistence.EFC.Configuration;
 using Backend.Shared.Infrastructure.Persistence.EFC.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Backend.Component.Infrastructure.Persistence.EFC.Repositories;
 public class ComponentRepository(AppDbContext context) : BaseRepository<Domain.Model.Aggregates.Component>(context), IComponentRepository
 {
-    public async Task<List<Domain.Model.Aggregates.Component>> FindComponentByIdAsync(int Id)
+    public async Task<List<Domain.Model.Aggregates.Component>> FindComponentByIdAsync(int id)
     {
-        return await Context.Set<Domain.Model.Aggregates.Component>().Where(c => c.Id == Id).ToListAsync();
+        return await Context.Set<Domain.Model.Aggregates.Component>().Where(c => c.Id == id).ToListAsync();
     }
 
     public Task<Domain.Model.Aggregates.Component> GetComponentsByCategoryAsync(string category)
@@ -36,9 +33,22 @@ public class ComponentRepository(AppDbContext context) : BaseRepository<Domain.M
         throw new NotImplementedException();
     }
 
-    public async Task<IEnumerable<Domain.Model.Aggregates.Component>> Handle(GetAllComponentsQuery query)
+    public Task<IEnumerable<Domain.Model.Aggregates.Component>> Handle(GetAllComponentsQuery query)
     {
         /*return await ComponentRepository.ListAsync();*/
         throw new NotImplementedException();
+    }
+
+    public async Task<double?> GetAverageRatingByComponentIdAsync(int componentId)
+    {
+        var ratings = await Context.Set<ComponentReview>()
+            .Where(r => r.ComponentId.CompId == componentId)
+            .Select(r => r.Rating)
+            .ToListAsync();
+
+        if (!ratings.Any())
+            return null;
+
+        return ratings.Average();
     }
 }

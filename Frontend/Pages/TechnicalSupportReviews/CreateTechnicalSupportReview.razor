@@ -1,0 +1,69 @@
+@page "/technical-support-reviews/create/{TechnicalSupportId:int}"
+@attribute [Authorize(Roles = PCMasterFrontend.Infrastructure.Constants.ERole.ROLE_CLIENTE)]
+
+<PageTitle>Crear Reseña de Soporte - PC Master</PageTitle>
+
+<div class="page-header">
+    <a href="/technical-support-reviews/@TechnicalSupportId" class="btn-link-sm">&larr; Volver</a>
+    <h1>Crear Reseña para Soporte #@TechnicalSupportId</h1>
+</div>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
+
+<div class="form-container">
+    <EditForm Model="model" OnValidSubmit="HandleCreate" FormName="create-tsr-form">
+        <div class="form-group">
+            <label for="userName">Nombre de Usuario</label>
+            <InputText id="userName" @bind-Value="model.UserName" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="rating">Calificación (1-5)</label>
+            <InputNumber id="rating" @bind-Value="model.Rating" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="comment">Comentario</label>
+            <InputTextArea id="comment" @bind-Value="model.Comment" class="form-control" rows="3" />
+        </div>
+        <button type="submit" class="btn-primary" disabled="@isLoading">
+            @(isLoading ? "Creando..." : "Publicar Reseña")
+        </button>
+    </EditForm>
+</div>
+
+@code {
+    [Inject] private ITechnicalSupportReviewService ReviewService { get; set; } = default!;
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+    [Parameter] public int TechnicalSupportId { get; set; }
+
+    private CreateTechnicalSupportReviewRequest model = new();
+    private string? errorMessage;
+    private bool isLoading;
+
+    protected override void OnInitialized()
+    {
+        model.TechnicalSupportId = TechnicalSupportId;
+    }
+
+    private async Task HandleCreate()
+    {
+        errorMessage = null;
+        isLoading = true;
+        try
+        {
+            await ReviewService.CreateAsync(model);
+            Navigation.NavigateTo($"/technical-support-reviews/{TechnicalSupportId}");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

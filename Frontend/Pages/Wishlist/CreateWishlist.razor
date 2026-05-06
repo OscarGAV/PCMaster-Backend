@@ -1,0 +1,64 @@
+@page "/wishlist/create"
+@attribute [Authorize(Roles = PCMasterFrontend.Infrastructure.Constants.ERole.ROLE_CLIENTE)]
+
+<PageTitle>Agregar a Wishlist - PC Master</PageTitle>
+
+<div class="page-header">
+    <a href="/wishlist" class="btn-link-sm">&larr; Volver</a>
+    <h1>Agregar a Wishlist</h1>
+</div>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
+
+<div class="form-container">
+    <EditForm Model="model" OnValidSubmit="HandleCreate" FormName="create-wish-form">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="userId">Usuario ID</label>
+                <InputNumber id="userId" @bind-Value="model.UserId" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="componentId">Componente ID</label>
+                <InputNumber id="componentId" @bind-Value="model.ComponentId" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="quantity">Cantidad</label>
+                <InputNumber id="quantity" @bind-Value="model.Quantity" class="form-control" />
+            </div>
+        </div>
+        <button type="submit" class="btn-primary" disabled="@isLoading">
+            @(isLoading ? "Agregando..." : "Agregar a Wishlist")
+        </button>
+    </EditForm>
+</div>
+
+@code {
+    [Inject] private IWishlistService WishlistService { get; set; } = default!;
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+    private CreateWishlistRequest model = new();
+    private string? errorMessage;
+    private bool isLoading;
+
+    private async Task HandleCreate()
+    {
+        errorMessage = null;
+        isLoading = true;
+        try
+        {
+            await WishlistService.CreateAsync(model);
+            Navigation.NavigateTo("/wishlist");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

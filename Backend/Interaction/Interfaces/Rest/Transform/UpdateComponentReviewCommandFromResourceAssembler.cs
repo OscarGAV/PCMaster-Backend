@@ -3,7 +3,7 @@ using Backend.Interaction.Interfaces.Rest.Resources;
 
 namespace Backend.Interaction.Interfaces.Rest.Transform;
 
-public class UpdateComponentReviewCommandFromResourceAssembler
+public static class UpdateComponentReviewCommandFromResourceAssembler
 {
     public static UpdateComponentReviewCommand ToCommandFromResource(int id, UpdateComponentReviewResource resource)
     {

@@ -1,2 +1,14 @@
 # Secrets
 .env
+# Node modules
+node_modules/
+# Logs
+logs
+*.log
+# OS generated files
+.DS_Store
+# Build output
+dist/
+# IDEs
+.vscode/
+.idea/

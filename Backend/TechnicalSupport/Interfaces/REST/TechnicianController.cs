@@ -1,4 +1,5 @@
 using System.Net.Mime;
+using Backend.IAM.Domain.Model.ValueObjects;
 using Backend.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 using Backend.TechnicalSupport.Domain.Model.Command;
 using Backend.TechnicalSupport.Domain.Model.Queries;
@@ -24,14 +25,19 @@ public class TechnicianController(ITechnicianCommandService commandService,
     /// <param name="resource"></param>
     /// <returns></returns>
     [HttpPost]
+    [Authorize(AllowedRoles = [ERole.ROLE_ADMIN])]
     public async Task<IActionResult> CreateTechnicians([FromBody] CreateTechnicianResource resource)
     {
         var command = CreateTechnicianCommandFromResourceAssembler.ToCommandFromResource(resource);
         var result = await commandService.Handle(command);
         if (result is null) return BadRequest();
         
-        return CreatedAtAction(nameof(GetTechnicianById), new { id = result.Id},
-        TechnicianResourceFromEntityAssembler.ToResourceFromEntity(result));
+        return CreatedAtAction(nameof(GetTechnicianById), new { id = result.Technician.Id},
+        new { 
+            technician = TechnicianResourceFromEntityAssembler.ToResourceFromEntity(result.Technician),
+            username = result.Username,
+            password = result.Password
+        });
     }
     
     /// <summary>
@@ -44,11 +50,17 @@ public class TechnicianController(ITechnicianCommandService commandService,
         var query = new GetAllTechnicianByGreatestStarsNumberQuery(); // Uses default values
         var result = await queryService.Handle(query);
 
-        if (result == null || !result.Any())
+        var technicians = result.ToList();
+        if (technicians.Count == 0)
             return NotFound("No technicians found with the specified criteria.");
 
-        // Transform the result to TechnicianResource with the rounded Stars value
-        var resources = result.Select(TechnicianResourceFromEntityAssembler.ToResourceFromEntity);
+        // Transform the result to TechnicianResource with the average rating
+        var resources = new List<TechnicianResource>();
+        foreach (var tech in technicians)
+        {
+            var avgRating = await queryService.GetAverageRatingByTechnicianNameAsync(tech.Name);
+            resources.Add(TechnicianResourceFromEntityAssembler.ToResourceFromEntity(tech, avgRating));
+        }
         return Ok(resources);
     }
     
@@ -65,8 +77,13 @@ public class TechnicianController(ITechnicianCommandService commandService,
     public async Task<IActionResult> GetAllTechnician()
     {
         var technicians = await queryService.Handle(new GetAllTechnicianQuery());
-        var technicianResources = technicians.Select(TechnicianResourceFromEntityAssembler.ToResourceFromEntity);
-        return Ok(technicianResources);
+        var resources = new List<TechnicianResource>();
+        foreach (var tech in technicians)
+        {
+            var avgRating = await queryService.GetAverageRatingByTechnicianNameAsync(tech.Name);
+            resources.Add(TechnicianResourceFromEntityAssembler.ToResourceFromEntity(tech, avgRating));
+        }
+        return Ok(resources);
     }
     
     /// <summary>
@@ -79,8 +96,8 @@ public class TechnicianController(ITechnicianCommandService commandService,
     {
         var getTechnicianById = new GetTechnicianByIdQuery(id);
         var result = await queryService.Handle(getTechnicianById);
-        if (result is null) return NotFound();
-        var resources = TechnicianResourceFromEntityAssembler.ToResourceFromEntity(result);
+        var avgRating = await queryService.GetAverageRatingByTechnicianNameAsync(result.Name);
+        var resources = TechnicianResourceFromEntityAssembler.ToResourceFromEntity(result, avgRating);
         return Ok(resources);
     }
     
@@ -91,12 +108,11 @@ public class TechnicianController(ITechnicianCommandService commandService,
     /// <param name="resource"></param>
     /// <returns></returns>
     [HttpPut("{id}")]
+    [Authorize(AllowedRoles = [ERole.ROLE_ADMIN])]
     public async Task<IActionResult> UpdateTechnicianSupport(int id, [FromBody] UpdateTechnicianResource resource)
     {
         var command = UpdateTechnicianCommandFromResourceAssembler.ToCommandFromResource(id, resource);
         var result = await commandService.Handle(command);
-    
-        if (result is null) return NotFound();
 
         return Ok(TechnicianResourceFromEntityAssembler.ToResourceFromEntity(result));
     }
@@ -107,6 +123,7 @@ public class TechnicianController(ITechnicianCommandService commandService,
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("{id}")]
+    [Authorize(AllowedRoles = [ERole.ROLE_ADMIN])]
     public async Task<IActionResult> DeleteTechnicianSupport(int id)
     {
         var command = new DeleteTechnicianCommand(id);

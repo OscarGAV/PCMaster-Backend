@@ -2,10 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Backend.TechnicalSupport.Interfaces.REST.Resources;
 
-public record UpdateTechnicalSupportResource()
+public record UpdateTechnicalSupportResource
 {
     [Required(ErrorMessage = "TechnicianId is required")]
-    public string TechnicianId { get; set; }
+    public required string TechnicianId { get; set; }
 
     public bool SupportType { get; set; }
 

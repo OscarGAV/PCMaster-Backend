@@ -1,5 +1,3 @@
-using Backend.Component.Domain.Model.ValueObjects;
-
 namespace Backend.Component.Interfaces.REST.Resources
 {
     public record ComponentResource(
@@ -8,9 +6,8 @@ namespace Backend.Component.Interfaces.REST.Resources
         string Description,
         float Price,
         int Stock,
-        int ProviderId,
         string Image,
-        int Ratings,
+        double? AverageRating,
         string Model,
         string Color,
         string Dimensions,

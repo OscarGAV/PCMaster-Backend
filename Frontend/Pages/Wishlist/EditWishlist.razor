@@ -1,0 +1,56 @@
+@page "/wishlist/{Id:int}/edit"
+@attribute [Authorize(Roles = PCMasterFrontend.Infrastructure.Constants.ERole.ROLE_CLIENTE)]
+
+<PageTitle>Editar Wishlist - PC Master</PageTitle>
+
+<div class="page-header">
+    <a href="/wishlist" class="btn-link-sm">&larr; Volver</a>
+    <h1>Editar Wishlist</h1>
+</div>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-error">@errorMessage</div>
+}
+
+<div class="form-container">
+    <EditForm Model="model" OnValidSubmit="HandleUpdate" FormName="edit-wish-form">
+        <div class="form-group">
+            <label for="quantity">Cantidad</label>
+            <InputNumber id="quantity" @bind-Value="model.Quantity" class="form-control" />
+        </div>
+        <button type="submit" class="btn-primary" disabled="@isSaving">
+            @(isSaving ? "Guardando..." : "Guardar Cambios")
+        </button>
+    </EditForm>
+</div>
+
+@code {
+    [Inject] private IWishlistService WishlistService { get; set; } = default!;
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+    [Parameter] public int Id { get; set; }
+
+    private UpdateWishlistRequest model = new();
+    private string? errorMessage;
+    private bool isSaving;
+
+    private async Task HandleUpdate()
+    {
+        errorMessage = null;
+        isSaving = true;
+        try
+        {
+            await WishlistService.UpdateAsync(Id, model);
+            Navigation.NavigateTo("/wishlist");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+}
