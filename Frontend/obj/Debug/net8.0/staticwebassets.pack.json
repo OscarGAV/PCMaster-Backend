@@ -9,6 +9,10 @@
       "PackagePath": "staticwebassets\\_framework\\blazor.webassembly.js.gz"
     },
     {
+      "Id": "C:\\Users\\Oscar\\OneDrive\\Documentos\\Oscar\\Proyectos Locales\\Backend-main\\Frontend\\wwwroot\\authentication\\sign-in.css",
+      "PackagePath": "staticwebassets\\authentication\\sign-in.css"
+    },
+    {
       "Id": "C:\\Users\\Oscar\\OneDrive\\Documentos\\Oscar\\Proyectos Locales\\Backend-main\\Frontend\\wwwroot\\css\\app.css",
       "PackagePath": "staticwebassets\\css\\app.css"
     },

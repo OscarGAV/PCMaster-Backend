@@ -5,7 +5,7 @@
 
 <nav class="navbar">
     <div class="navbar-container">
-        <a href="/" class="navbar-brand">
+        <a href="/home" class="navbar-brand">
             <span class="brand-icon">&#9881;</span>
             <span class="brand-text">PC Master</span>
         </a>
@@ -56,6 +56,6 @@
     private async Task Logout()
     {
         await AuthService.LogoutAsync();
-        Navigation.NavigateTo("/", forceLoad: true);
+        Navigation.NavigateTo("/home", forceLoad: true);
     }
 }

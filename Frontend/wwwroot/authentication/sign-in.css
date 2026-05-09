@@ -1,0 +1,234 @@
+:root {
+    --pink: #FF1A6C;
+    --cyan: #00D4FF;
+    --dark: #0a0a0f;
+    --card-bg: rgba(255,255,255,0.07);
+    --border: rgba(255,255,255,0.12);
+}
+
+.auth-page {
+    font-family: 'Exo 2', 'Segoe UI', system-ui, sans-serif;
+    background: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+    position: relative;
+    color: #fff;
+}
+
+.bg-layer {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+        radial-gradient(ellipse 80% 60% at 20% 50%, rgba(0,60,120,0.55) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 80% 80%, rgba(200,0,60,0.25) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 80% at 50% 50%, rgba(5,5,20,1) 0%, transparent 100%);
+}
+
+.bg-img {
+    position: fixed; inset: 0; z-index: 1;
+    background: url('https://images.unsplash.com/photo-1591488320449-011701bb6704?w=1600&q=80') center/cover no-repeat;
+    opacity: 0.18;
+    filter: saturate(1.8) hue-rotate(200deg);
+}
+
+.scan-lines {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+}
+
+.page {
+    position: relative; z-index: 10;
+    width: 100%; display: flex; align-items: stretch;
+}
+
+.back-btn {
+    position: fixed; top: 24px; left: 24px; z-index: 20;
+    width: 40px; height: 40px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(8px);
+    transition: all 0.2s;
+    text-decoration: none; font-size: 18px;
+}
+.back-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+.left-panel {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 60px 40px;
+}
+
+.logo-wrap { text-align: center; }
+.logo-icon {
+    width: 90px; height: 70px; margin: 0 auto 16px;
+    position: relative;
+}
+.keyboard-svg { width: 90px; height: 70px; }
+.logo-title {
+    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    font-size: 52px; font-weight: 700;
+    color: #fff;
+    letter-spacing: 2px;
+    line-height: 1;
+    text-shadow: 0 0 40px rgba(0,212,255,0.3);
+}
+.logo-sub {
+    font-family: 'Exo 2', 'Segoe UI', sans-serif;
+    font-size: 13px; font-weight: 300;
+    letter-spacing: 8px;
+    color: var(--cyan);
+    margin-top: 8px;
+    text-transform: uppercase;
+}
+
+.right-panel {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center;
+    padding: 60px 40px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    animation: fadeUp 0.5s ease both;
+}
+.logo-wrap { animation: fadeUp 0.5s 0.1s ease both; }
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.login-title {
+    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    font-size: 40px; font-weight: 700;
+    color: #fff; margin-bottom: 32px;
+    text-align: center;
+}
+
+.field {
+    position: relative; margin-bottom: 16px;
+}
+.field input {
+    width: 100%; padding: 16px 20px;
+    background: rgba(255,255,255,0.92);
+    border: none; border-radius: 12px;
+    font-family: 'Exo 2', 'Segoe UI', sans-serif;
+    font-size: 15px; color: #222;
+    outline: none;
+    transition: all 0.2s;
+}
+.field input::placeholder { color: #888; }
+.field input:focus {
+    background: #fff;
+    box-shadow: 0 0 0 2px var(--pink);
+}
+
+.btn-submit {
+    width: 100%; padding: 16px;
+    background: var(--pink);
+    border: none; border-radius: 12px;
+    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    font-size: 18px; font-weight: 700;
+    color: #fff; cursor: pointer;
+    letter-spacing: 1px;
+    margin-top: 8px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 24px rgba(255,26,108,0.4);
+}
+.btn-submit:hover:not(:disabled) {
+    background: #ff3d7f;
+    box-shadow: 0 6px 32px rgba(255,26,108,0.6);
+    transform: translateY(-1px);
+}
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.forgot {
+    text-align: center; margin: 16px 0;
+    color: rgba(255,255,255,0.6);
+    font-size: 13px; cursor: pointer;
+    transition: color 0.2s;
+}
+.forgot:hover { color: #fff; }
+
+.btn-register {
+    width: 100%; padding: 16px;
+    background: var(--cyan);
+    border: none; border-radius: 12px;
+    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    font-size: 18px; font-weight: 700;
+    color: #000; cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(0,212,255,0.3);
+    text-align: center;
+    display: block; text-decoration: none;
+    margin-top: 8px;
+}
+.btn-register:hover {
+    box-shadow: 0 6px 28px rgba(0,212,255,0.5);
+    transform: translateY(-1px);
+}
+
+.alert-error {
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.4);
+    color: #fca5a5;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.alert-success {
+    background: rgba(34,197,94,0.15);
+    border: 1px solid rgba(34,197,94,0.4);
+    color: #86efac;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+    .left-panel {
+        display: none;
+    }
+    .right-panel {
+        flex: 1;
+        padding: 80px 24px 40px;
+    }
+    .login-title {
+        font-size: 32px;
+    }
+}
+
+@media (max-width: 480px) {
+    .right-panel {
+        padding: 72px 16px 32px;
+    }
+    .login-title {
+        font-size: 28px;
+        margin-bottom: 24px;
+    }
+    .field input {
+        padding: 14px 16px;
+        font-size: 14px;
+    }
+    .btn-submit, .btn-register {
+        padding: 14px;
+        font-size: 16px;
+    }
+}

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "i1fCoTKa74mKsYV2AbcynGWugOQ2r9OchkGjZH00ZtE=",
+  "Hash": "yG94mlW98/+GLxNMWLNNxIEqA4QHImth6utjPxzLJbg=",
   "Source": "Frontend",
   "BasePath": "/",
   "Mode": "Root",
@@ -8014,6 +8014,25 @@
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "C:\\Users\\Oscar\\OneDrive\\Documentos\\Oscar\\Proyectos Locales\\Backend-main\\Frontend\\bin\\Debug\\net8.0\\wwwroot\\_framework\\mscorlib.wasm"
+    },
+    {
+      "Identity": "C:\\Users\\Oscar\\OneDrive\\Documentos\\Oscar\\Proyectos Locales\\Backend-main\\Frontend\\wwwroot\\authentication\\sign-in.css",
+      "SourceId": "Frontend",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Oscar\\OneDrive\\Documentos\\Oscar\\Proyectos Locales\\Backend-main\\Frontend\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "authentication/sign-in.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\authentication\\sign-in.css"
     },
     {
       "Identity": "C:\\Users\\Oscar\\OneDrive\\Documentos\\Oscar\\Proyectos Locales\\Backend-main\\Frontend\\wwwroot\\css\\app.css",
