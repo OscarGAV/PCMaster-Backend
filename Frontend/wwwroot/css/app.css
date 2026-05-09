@@ -49,7 +49,7 @@
 }
 
 html, body {
-    font-family: var(--font-primary);
+    font-family: var(--font-primary), serif;
     background-color: var(--color-bg-secondary);
     color: var(--color-text-primary);
     line-height: 1.6;
@@ -712,7 +712,7 @@ a:hover {
     font-size: 0.85rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
 }
 
 .data-table td {
@@ -818,7 +818,7 @@ a:hover {
     border: 2px solid var(--color-gray-200);
     border-radius: var(--radius-sm);
     font-size: 0.95rem;
-    font-family: var(--font-primary);
+    font-family: var(--font-primary), serif;
     transition: border-color var(--transition);
     background: var(--color-gray-100);
 }
@@ -1106,59 +1106,6 @@ textarea.form-control {
 }
 
 /* ============================================================
-   FOOTER
-   ============================================================ */
-.footer {
-    background: var(--color-bg-primary);
-    color: var(--color-text-secondary);
-    padding: 3rem 1.5rem 1.5rem;
-    margin-top: 3rem;
-}
-
-.footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 2rem;
-}
-
-.footer-section h4 {
-    color: var(--color-highlight);
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
-}
-
-.footer-section p {
-    opacity: 0.8;
-    font-size: 0.9rem;
-}
-
-.footer-section a {
-    display: block;
-    color: var(--color-text-secondary);
-    opacity: 0.7;
-    padding: 0.3rem 0;
-    font-size: 0.9rem;
-    transition: opacity var(--transition);
-}
-
-.footer-section a:hover {
-    opacity: 1;
-    color: var(--color-highlight);
-}
-
-.footer-bottom {
-    grid-column: 1 / -1;
-    border-top: 1px solid rgba(246, 243, 249, 0.1);
-    padding-top: 1.5rem;
-    margin-top: 1rem;
-    text-align: center;
-    font-size: 0.85rem;
-    opacity: 0.6;
-}
-
-/* ============================================================
    SECTION TITLE
    ============================================================ */
 .section-title {
@@ -1197,10 +1144,6 @@ img[onerror] {
     }
 
     .detail-container {
-        grid-template-columns: 1fr;
-    }
-
-    .footer-container {
         grid-template-columns: 1fr;
     }
 
